@@ -1,4 +1,4 @@
-package com.wieland.BandTracker;
+package com.BandTracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
