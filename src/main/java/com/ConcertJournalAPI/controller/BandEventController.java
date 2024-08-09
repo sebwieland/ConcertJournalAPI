@@ -1,7 +1,7 @@
-package com.BandTracker.controller;
+package com.ConcertJournalAPI.controller;
 
-import com.BandTracker.model.BandEvent;
-import com.BandTracker.service.BandEventService;
+import com.ConcertJournalAPI.model.BandEvent;
+import com.ConcertJournalAPI.service.BandEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

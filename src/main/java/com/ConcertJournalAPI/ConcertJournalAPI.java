@@ -1,13 +1,13 @@
-package com.BandTracker;
+package com.ConcertJournalAPI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BandTrackerApplication {
+public class ConcertJournalAPI {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BandTrackerApplication.class, args);
+		SpringApplication.run(ConcertJournalAPI.class, args);
 	}
 
 }

@@ -1,10 +1,10 @@
-package com.BandTracker;
+package com.ConcertJournalAPI;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BandTrackerApplicationTests {
+class ConcertJournalAPITests {
 
 	@Test
 	void contextLoads() {

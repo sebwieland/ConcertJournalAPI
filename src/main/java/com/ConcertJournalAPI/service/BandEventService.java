@@ -1,7 +1,7 @@
-package com.BandTracker.service;
+package com.ConcertJournalAPI.service;
 
-import com.BandTracker.model.BandEvent;
-import com.BandTracker.repository.BandEventRepository;
+import com.ConcertJournalAPI.model.BandEvent;
+import com.ConcertJournalAPI.repository.BandEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

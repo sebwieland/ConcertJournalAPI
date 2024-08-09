@@ -1,6 +1,6 @@
-package com.BandTracker.repository;
+package com.ConcertJournalAPI.repository;
 
-import com.BandTracker.model.BandEvent;
+import com.ConcertJournalAPI.model.BandEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BandEventRepository extends JpaRepository<BandEvent, Long> {
