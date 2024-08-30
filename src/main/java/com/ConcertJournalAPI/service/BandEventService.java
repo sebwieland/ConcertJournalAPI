@@ -5,15 +5,13 @@ import com.ConcertJournalAPI.repository.BandEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class BandEventService {
     @Autowired
     private BandEventRepository bandEventRepository;
 
-    public List<BandEvent> getAllEvents() {
-        return bandEventRepository.findAll();
+    public long getAllEvents() {
+        return bandEventRepository.count();
     }
 
     public BandEvent getEventById(Long id) {
