@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:3000")
+@Validated
 @RestController
-@RequestMapping("/BandTracker/events")
+@RequestMapping("/ConcertJournalAPI/events")
 public class BandEventController {
     @Autowired
     private BandEventService bandEventService;

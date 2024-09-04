@@ -15,21 +15,21 @@ import java.util.stream.IntStream;
 @EnableWebMvc
 public class ConcertJournalAPI {
 
-	@Bean
-	public CommandLineRunner initData(BandEventRepository repository) {
-		return (args) -> {
-			IntStream.range(0, 20) // replace N with the desired number of dummy events
-					.forEach(i -> repository.save(createDummyBandEvent(i)));
-		};
-	}
+//	@Bean
+//	public CommandLineRunner initData(BandEventRepository repository) {
+//		return (args) -> {
+//			IntStream.range(0, 85) // replace N with the desired number of dummy events
+//					.forEach(i -> repository.save(createDummyBandEvent(i)));
+//		};
+//	}
 
-	private BandEvent createDummyBandEvent(int index) {
-		BandEvent dummyEvent = new BandEvent();
-		dummyEvent.setBandName("Bandname" + (index + 1));
-		dummyEvent.setPlace("here" + (index + 1));
-		dummyEvent.setDate(LocalDate.now());
-		return dummyEvent;
-	}
+//	private BandEvent createDummyBandEvent(int index) {
+//		BandEvent dummyEvent = new BandEvent();
+//		dummyEvent.setBandName("Bandname" + (index + 1));
+//		dummyEvent.setPlace("here" + (index + 1));
+//		dummyEvent.setDate(LocalDate.now());
+//		return dummyEvent;
+//	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(ConcertJournalAPI.class, args);

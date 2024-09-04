@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.wieland</groupId>
-	<artifactId>BandTracker</artifactId>
+	<artifactId>ConcertJournalAPI</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>BandTracker</name>
+	<name>ConcertJournalAPI</name>
 	<description>Web App to track where you&apos;ve seen which band.</description>
 	<properties>
 		<java.version>22</java.version>
