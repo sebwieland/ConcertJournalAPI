@@ -2,7 +2,9 @@ package com.ConcertJournalAPI.controller;
 
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.service.BandEventService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public class BandEventController {
     }
 
     @PostMapping
-    public BandEvent createEvent(@RequestBody BandEvent bandEvent) {
+    public BandEvent createEvent(@RequestBody @Valid BandEvent bandEvent) {
         return bandEventService.saveEvent(bandEvent);
     }
 
