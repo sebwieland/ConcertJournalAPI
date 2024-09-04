@@ -18,5 +18,6 @@ public class BandEvent {
     @NotBlank(message = "Band Name is required.")
     private String bandName;
     private String place;
+    @NotBlank(message = "Date is required.")
     private LocalDate date;
 }
