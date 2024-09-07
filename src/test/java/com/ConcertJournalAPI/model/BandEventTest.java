@@ -80,9 +80,10 @@ class BandEventTest {
         bandEvent.setId(1L);
         bandEvent.setBandName("Test Band");
         bandEvent.setPlace("Test Place");
+        bandEvent.setComment("");
         bandEvent.setDate(LocalDate.now());
 
-        String expected = "BandEvent(id=1, bandName=Test Band, place=Test Place, date=" + LocalDate.now() + ")";
+        String expected = "BandEvent(id=1, bandName=Test Band, place=Test Place, date=" + LocalDate.now() + ", comment=)";
         assertEquals(expected, bandEvent.toString());
     }
 
