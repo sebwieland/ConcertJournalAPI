@@ -36,8 +36,6 @@ class BandEventServiceTest {
         BandEvent mockEvent = Mockito.mock(BandEvent.class);
         Long randomId = (long) (Math.random() * 1000);
         Mockito.when(mockEvent.getId()).thenReturn(randomId);
-        // Set other properties as needed
-        //Mockito.when(mockEvent.getBandName()).thenReturn("Band " + (int) (Math.random() * 1000));
         return mockEvent;
     }
 

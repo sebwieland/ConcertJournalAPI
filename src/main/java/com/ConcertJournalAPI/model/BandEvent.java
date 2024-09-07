@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -18,6 +19,6 @@ public class BandEvent {
     @NotBlank(message = "Band Name is required.")
     private String bandName;
     private String place;
-    @NotBlank(message = "Date is required.")
+    @NotNull(message = "Date is required.")
     private LocalDate date;
 }
