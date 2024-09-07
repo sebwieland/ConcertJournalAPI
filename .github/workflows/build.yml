@@ -1,6 +1,6 @@
 name: Build and Test
 
-on: 
+on:
   workflow_dispatch:
   push:
 
@@ -12,14 +12,27 @@ jobs:
         java: [ 22 ]
     name: Run unit tests on Java ${{ matrix.java }}
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
       - name: Setup java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
+          distribution: 'temurin'
       - run: mvn -f pom.xml clean test
-      - name: Generate code coverage report
-        run: mvn jacoco:report
+  coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 22 ]
+    name: Generate code coverage report on Java ${{ matrix.java }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+      - run: mvn jacoco:report
       - name: Upload code coverage report
         uses: actions/upload-artifact@v2
         with:
