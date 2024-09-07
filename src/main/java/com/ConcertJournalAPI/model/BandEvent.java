@@ -21,4 +21,5 @@ public class BandEvent {
     private String place;
     @NotNull(message = "Date is required.")
     private LocalDate date;
+    private String comment;
 }
