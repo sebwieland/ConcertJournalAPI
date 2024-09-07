@@ -1,18 +1,17 @@
 package com.ConcertJournalAPI.model;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.validation.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-
 import java.time.LocalDate;
 import java.util.Set;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -21,11 +20,14 @@ class BandEventTest {
 
     private Validator validator;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @BeforeEach
     public void setupValidator() {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to create validator", e);
         }
     }
@@ -83,4 +85,42 @@ class BandEventTest {
         String expected = "BandEvent(id=1, bandName=Test Band, place=Test Place, date=" + LocalDate.now() + ")";
         assertEquals(expected, bandEvent.toString());
     }
+
+    @Test
+    public void testValidBandEventCreation() {
+        BandEvent bandEvent = new BandEvent();
+        bandEvent.setBandName("Test Band");
+        bandEvent.setPlace("Test Place");
+        bandEvent.setDate(LocalDate.now());
+
+        assertNotNull(bandEvent);
+        assertEquals("Test Band", bandEvent.getBandName());
+        assertEquals("Test Place", bandEvent.getPlace());
+        assertNotNull(bandEvent.getDate());
+    }
+
+    @Test
+    public void testInvalidBandEventCreation_BandNameIsNull() {
+        BandEvent bandEvent = new BandEvent();
+        bandEvent.setPlace("Test Place");
+        bandEvent.setDate(LocalDate.now());
+
+        assertThrows(NullPointerException.class, () -> {
+            entityManager.persist(bandEvent);
+            entityManager.flush();
+        });
+    }
+
+    @Test
+    public void testInvalidBandEventCreation_DateIsNull() {
+        BandEvent bandEvent = new BandEvent();
+        bandEvent.setBandName("Test Band");
+        bandEvent.setPlace("Test Place");
+
+        assertThrows(NullPointerException.class, () -> {
+            entityManager.persist(bandEvent);
+            entityManager.flush();
+        });
+    }
+
 }
