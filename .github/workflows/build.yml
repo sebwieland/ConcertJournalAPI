@@ -32,7 +32,7 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
-      - run: mvn -f pom.xml clean test -Djacoco.agent.ut=true
+      - run: mvn jacoco:report
       - name: Upload code coverage report
         uses: actions/upload-artifact@v4
         with:
