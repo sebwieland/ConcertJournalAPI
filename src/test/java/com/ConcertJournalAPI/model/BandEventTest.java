@@ -3,6 +3,7 @@ package com.ConcertJournalAPI.model;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -127,6 +128,78 @@ class BandEventTest {
             entityManager.persist(bandEvent);
             entityManager.flush();
         });
+    }
+
+    @Test
+    public void testComment() {
+        BandEvent event = new BandEvent();
+        event.setComment("Test comment");
+        assertEquals("Test comment", event.getComment());
+    }
+
+    @Test
+    public void testRatingValid() {
+        BandEvent event = new BandEvent();
+        event.setCreationDate(Instant.now());
+        event.setModificationDate(Instant.now());
+        event.setBandName("Test Band");
+        event.setPlace("Test Place");
+        event.setDate(LocalDate.now());
+        event.setRating(3);
+        Set<ConstraintViolation<BandEvent>> violations = validator.validate(event);
+        Assertions.assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    public void testRatingTooLow() {
+        BandEvent event = new BandEvent();
+        event.setRating(-1);
+        event.setCreationDate(Instant.now());
+        event.setModificationDate(Instant.now());
+        event.setBandName("Test Band");
+        event.setPlace("Test Place");
+        event.setDate(LocalDate.now());
+        Set<ConstraintViolation<BandEvent>> violations = validator.validate(event);
+        assertEquals(1, violations.size());
+        assertEquals("Rating must be at least 0", violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testRatingTooHigh() {
+        BandEvent event = new BandEvent();
+        event.setCreationDate(Instant.now());
+        event.setModificationDate(Instant.now());
+        event.setBandName("Test Band");
+        event.setPlace("Test Place");
+        event.setDate(LocalDate.now());
+        event.setRating(6);
+        Set<ConstraintViolation<BandEvent>> violations = validator.validate(event);
+        assertEquals(1, violations.size());
+        assertEquals("Rating must be at most 5", violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testCreationDate() {
+        BandEvent event = new BandEvent();
+        Instant before = Instant.now();
+        // Simulate persisting the event
+        event.setCreationDate(Instant.now());
+        Instant after = Instant.now();
+        assertNotNull(event.getCreationDate());
+        Assertions.assertTrue(event.getCreationDate().isAfter(before));
+        Assertions.assertTrue(event.getCreationDate().isBefore(after));
+    }
+
+    @Test
+    public void testModificationDate() {
+        BandEvent event = new BandEvent();
+        Instant before = Instant.now();
+        // Simulate updating the event
+        event.setModificationDate(Instant.now());
+        Instant after = Instant.now();
+        assertNotNull(event.getModificationDate());
+        Assertions.assertTrue(event.getModificationDate().isAfter(before));
+        Assertions.assertTrue(event.getModificationDate().isBefore(after));
     }
 
 }
