@@ -18,6 +18,7 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
+          cache: 'maven'
       - run: mvn -f pom.xml clean test
       - run: mvn jacoco:report
       - name: Upload code coverage report
