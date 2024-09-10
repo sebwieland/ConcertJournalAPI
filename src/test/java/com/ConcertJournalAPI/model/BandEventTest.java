@@ -62,6 +62,7 @@ class BandEventTest {
         bandEvent.setDate(LocalDate.now());
         bandEvent.setCreationDate(Instant.now());
         bandEvent.setModificationDate(Instant.now());
+        bandEvent.setRating(0);
         Set<ConstraintViolation<BandEvent>> violations = validator.validate(bandEvent);
 
         assertEquals(1, violations.size());
@@ -74,6 +75,7 @@ class BandEventTest {
         bandEvent.setBandName("Test Band");
         bandEvent.setCreationDate(Instant.now());
         bandEvent.setModificationDate(Instant.now());
+        bandEvent.setRating(0);
         Set<ConstraintViolation<BandEvent>> violations = validator.validate(bandEvent);
 
         assertEquals(1, violations.size());
