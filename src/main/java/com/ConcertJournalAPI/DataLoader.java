@@ -21,16 +21,20 @@ public class DataLoader implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
+        // userRepository.delete(userRepository.findByUsername("admin"));
         // Check if users already exist
-        if (userRepository.count() == 0) {
+        if (!userRepository.existsAppUserByUsername("admin")) {
             // Create default user
             AppUser user = new AppUser();
             user.setUsername("admin");
-            user.setPassword(passwordEncoder.encode("adminpassword"));
+            user.setPassword(passwordEncoder.encode("password"));
             userRepository.save(user);
 
             System.out.println("Default user created with username 'admin' and password 'adminpassword'");
+        }
+        else {
+            System.out.println("Default user already exists");
         }
     }
 }
