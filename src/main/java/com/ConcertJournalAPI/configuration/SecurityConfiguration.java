@@ -5,7 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SecurityConfiguration {
@@ -14,16 +17,22 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // Disable CSRF for simplicity (enable it in production)
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
+
+                .logout(logout -> logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                )
+                .formLogin(withDefaults()
+                )
+
                 // Authorize requests
                 .authorizeHttpRequests(auth -> auth
-                        // Permit access to the registration and login endpoints
-                        .requestMatchers("/auth/**", "/users/register").permitAll()
-                        // All other endpoints require authentication
+                        .requestMatchers("/error", "/auth/**", "/register", "/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 // Use HTTP Basic Authentication (for simplicity)
-                .httpBasic();
+               .httpBasic(withDefaults());
 
         return http.build();
     }
