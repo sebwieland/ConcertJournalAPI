@@ -6,7 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -26,6 +26,8 @@ public class UserController {
         // Encode the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        //set role to user by default
+        user.setRole("USER");
         return "User registered successfully";
     }
 }

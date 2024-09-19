@@ -30,6 +30,7 @@ public class CustomUserDetailsServiceTest {
         AppUser appUser = new AppUser();
         appUser.setUsername(username);
         appUser.setPassword("password");
+        appUser.setRole("USER");
         when(userRepository.findByUsername(username)).thenReturn(appUser);
 
         // Act
