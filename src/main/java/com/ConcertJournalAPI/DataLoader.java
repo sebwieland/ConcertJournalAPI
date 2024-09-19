@@ -31,16 +31,17 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // userRepository.delete(userRepository.findByUsername("admin"));
+//         userRepository.delete(userRepository.findByUsername("admin"));
         // Check if users already exist
         if (!userRepository.existsAppUserByUsername("admin")) {
             // Create default user
             AppUser user = new AppUser();
             user.setUsername("admin");
             user.setPassword(passwordEncoder.encode("password"));
+            user.setRole("ADMIN");
             userRepository.save(user);
 
-            System.out.println("Default user created with username 'admin' and password 'adminpassword'");
+            System.out.println("Default user created with username 'admin' and password 'password'");
         } else {
             System.out.println("Default user already exists");
         }

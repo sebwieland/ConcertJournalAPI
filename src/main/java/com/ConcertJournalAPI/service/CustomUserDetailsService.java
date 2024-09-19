@@ -4,7 +4,6 @@ import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -25,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         // Convert User to UserDetails
         return org.springframework.security.core.userdetails.User.withUsername(appUser.getUsername())
                 .password(appUser.getPassword())
-                .roles("ADMIN") // Set roles as needed
+                .roles(appUser.getRole()) // Set roles as needed
                 .build();
     }
 }
