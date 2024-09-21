@@ -36,4 +36,8 @@ public class BandEvent {
     @UpdateTimestamp
     private Instant modificationDate;
 
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private AppUser appUser;
+
 }
