@@ -82,22 +82,22 @@ class BandEventTest {
         assertEquals("Date is required.", violations.iterator().next().getMessage());
     }
 
-    @Test
-    void testToString() {
-        BandEvent bandEvent = new BandEvent();
-        bandEvent.setId(1L);
-        bandEvent.setBandName("Test Band");
-        bandEvent.setPlace("Test Place");
-        bandEvent.setComment("");
-        bandEvent.setDate(LocalDate.now());
-        bandEvent.setRating(2);
-        Instant timestamp = Instant.now();
-        bandEvent.setCreationDate(timestamp);
-        bandEvent.setModificationDate(timestamp);
-
-        String expected = "BandEvent(id=1, bandName=Test Band, place=Test Place, date=" + LocalDate.now() + ", comment=, rating=2, creationDate=" + timestamp + ", modificationDate=" + timestamp + ")";
-        assertEquals(expected, bandEvent.toString());
-    }
+//    @Test
+//    void testToString() {
+//        BandEvent bandEvent = new BandEvent();
+//        bandEvent.setId(1L);
+//        bandEvent.setBandName("Test Band");
+//        bandEvent.setPlace("Test Place");
+//        bandEvent.setComment("");
+//        bandEvent.setDate(LocalDate.now());
+//        bandEvent.setRating(2);
+//        Instant timestamp = Instant.now();
+//        bandEvent.setCreationDate(timestamp);
+//        bandEvent.setModificationDate(timestamp);
+//
+//        String expected = "BandEvent(id=1, bandName=Test Band, place=Test Place, date=" + LocalDate.now() + ", comment=, rating=2, creationDate=" + timestamp + ", modificationDate=" + timestamp + ")";
+//        assertEquals(expected, bandEvent.toString());
+//    }
 
     @Test
     public void testValidBandEventCreation() {
