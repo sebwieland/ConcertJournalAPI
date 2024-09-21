@@ -1,6 +1,8 @@
 package com.ConcertJournalAPI.controller;
 
+import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
+import com.ConcertJournalAPI.repository.UserRepository;
 import com.ConcertJournalAPI.service.BandEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,20 +10,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BandEventControllerTest {
 
     @Mock
     private BandEventService bandEventService;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private BandEventController bandEventController;
@@ -67,8 +72,11 @@ class BandEventControllerTest {
     @Test
     void testCreateEvent() {
         when(bandEventService.saveEvent(bandEvent1)).thenReturn(bandEvent1);
+        when(userRepository.findByUsername(anyString())).thenReturn(new AppUser());
+        UserDetails userDetails = mock(UserDetails.class);
+        when(userDetails.getUsername()).thenReturn("testUsername");
 
-        BandEvent response = bandEventController.createEvent(bandEvent1);
+        BandEvent response = bandEventController.createEvent(bandEvent1, userDetails);
 
         assertEquals(bandEvent1, response);
         verify(bandEventService).saveEvent(bandEvent1);

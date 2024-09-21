@@ -1,9 +1,13 @@
 package com.ConcertJournalAPI.controller;
 
+import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
+import com.ConcertJournalAPI.repository.UserRepository;
 import com.ConcertJournalAPI.service.BandEventService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +21,9 @@ public class BandEventController {
     @Autowired
     private BandEventService bandEventService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping
     public List<BandEvent> getAllEvents() {
         return bandEventService.getAllEvents();
@@ -28,7 +35,9 @@ public class BandEventController {
     }
 
     @PostMapping
-    public BandEvent createEvent(@RequestBody @Valid BandEvent bandEvent) {
+    public BandEvent createEvent(@RequestBody @Valid BandEvent bandEvent, @AuthenticationPrincipal UserDetails userDetails) {
+        AppUser appUser = userRepository.findByUsername(userDetails.getUsername());
+        bandEvent.setAppUser(appUser);
         return bandEventService.saveEvent(bandEvent);
     }
 
