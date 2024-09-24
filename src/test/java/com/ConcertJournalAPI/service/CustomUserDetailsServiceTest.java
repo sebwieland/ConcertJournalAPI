@@ -46,11 +46,11 @@ public class CustomUserDetailsServiceTest {
     @Test
     public void testLoadUserByUsernameUserNotFound() {
         // Arrange
-        String username = "testUser";
-        when(userRepository.findByUsername(username)).thenReturn(null);
+        String email = "testEmail@example.com";
+        when(userRepository.findByEmail(email)).thenReturn(null);
 
         // Act and Assert
-        assertThrows(UsernameNotFoundException.class, () -> customUserDetailsService.loadUserByUsername(username));
+        assertThrows(UsernameNotFoundException.class, () -> customUserDetailsService.loadUserByUsername(email));
     }
 
     @Test
