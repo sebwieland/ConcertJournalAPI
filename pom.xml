@@ -14,7 +14,7 @@
     <name>ConcertJournalAPI</name>
     <description>Web App to track where you&apos;ve seen which band.</description>
     <properties>
-        <java.version>22</java.version>
+        <java.version>21</java.version>
     </properties>
     <dependencies>
         <dependency>
