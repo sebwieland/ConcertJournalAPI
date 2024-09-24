@@ -27,14 +27,16 @@ public class CustomUserDetailsServiceTest {
     public void testLoadUserByUsernameSuccess() {
         // Arrange
         String username = "testUser";
+        String email = "test@example.com";
         AppUser appUser = new AppUser();
         appUser.setUsername(username);
+        appUser.setEmail(email);
         appUser.setPassword("password");
         appUser.setRole("USER");
-        when(userRepository.findByUsername(username)).thenReturn(appUser);
+        when(userRepository.findByEmail(email)).thenReturn(appUser);
 
         // Act
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
         // Assert
         assertEquals(username, userDetails.getUsername());
