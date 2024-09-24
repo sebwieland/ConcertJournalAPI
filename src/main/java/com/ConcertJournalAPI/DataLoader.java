@@ -31,7 +31,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-//         userRepository.delete(userRepository.findByUsername("admin"));
+         userRepository.delete(userRepository.findByUsername("admin"));
         // Check if users already exist
         if (!userRepository.existsAppUserByUsername("admin")) {
             // Create default user
@@ -39,6 +39,7 @@ public class DataLoader implements CommandLineRunner {
             user.setUsername("admin");
             user.setPassword(passwordEncoder.encode("password"));
             user.setRole("ADMIN");
+            user.setEmail("admin@example.com");
             userRepository.save(user);
 
             System.out.println("Default user created with username 'admin' and password 'password'");
