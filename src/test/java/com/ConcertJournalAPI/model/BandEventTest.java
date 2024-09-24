@@ -185,11 +185,12 @@ class BandEventTest {
     }
 
     @Test
-    public void testCreationDate() {
+    public void testCreationDate() throws InterruptedException {
         BandEvent event = new BandEvent();
         Instant before = Instant.now();
         // Simulate persisting the event
         event.setCreationDate(Instant.now());
+        Thread.sleep(2000);
         Instant after = Instant.now();
         assertNotNull(event.getCreationDate());
         Assertions.assertTrue(event.getCreationDate().isAfter(before));
@@ -197,11 +198,13 @@ class BandEventTest {
     }
 
     @Test
-    public void testModificationDate() {
+    public void testModificationDate() throws InterruptedException {
         BandEvent event = new BandEvent();
         Instant before = Instant.now();
         // Simulate updating the event
         event.setModificationDate(Instant.now());
+        // wait for 2 seconds
+        Thread.sleep(2000);
         Instant after = Instant.now();
         assertNotNull(event.getModificationDate());
         Assertions.assertTrue(event.getModificationDate().isAfter(before));
