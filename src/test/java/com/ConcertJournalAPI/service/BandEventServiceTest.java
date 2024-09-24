@@ -3,26 +3,19 @@ package com.ConcertJournalAPI.service;
 import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.BandEventRepository;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class BandEventServiceTest {
 
     @Mock
@@ -31,23 +24,23 @@ class BandEventServiceTest {
     @InjectMocks
     private BandEventService bandEventService;
 
-    @Before
+    @BeforeEach
     public void setup() {
         //MockitoAnnotations.initMocks(this);
     }
 
-    public BandEvent getMockBandEvent() {
-        BandEvent mockEvent = Mockito.mock(BandEvent.class);
+    public BandEvent getSampleBandEvent() {
+        BandEvent sampleEvent = new BandEvent();
         Long randomId = (long) (Math.random() * 1000);
-        Mockito.when(mockEvent.getId()).thenReturn(randomId);
-        when(mockEvent.getAppUser()).thenReturn(mock(AppUser.class));
-        return mockEvent;
+        sampleEvent.setId(randomId);
+        sampleEvent.setAppUser(new AppUser());
+        return sampleEvent;
     }
 
     @Test
     void testGetAllEvents() {
         // Given: a mock repository with some sample BandEvents
-        List<BandEvent> sampleEvents = Arrays.asList(getMockBandEvent(), getMockBandEvent());
+        List<BandEvent> sampleEvents = Arrays.asList(getSampleBandEvent(), getSampleBandEvent());
         when(bandEventRepository.findAll()).thenReturn(sampleEvents);
 
         // When: calling the service method
@@ -61,7 +54,7 @@ class BandEventServiceTest {
     @Test
     void testGetEventById() {
         // Given: a mock repository with one sample BandEvent
-        BandEvent sampleEvent = getMockBandEvent();
+        BandEvent sampleEvent = getSampleBandEvent();
         when(bandEventRepository.findById(sampleEvent.getId())).thenReturn(java.util.Optional.of(sampleEvent));
 
         // When: calling the service method
@@ -75,7 +68,7 @@ class BandEventServiceTest {
     @Test
     void testSaveEvent() {
         // Given: a mock repository with one sample BandEvent
-        BandEvent sampleEvent = getMockBandEvent();
+        BandEvent sampleEvent = getSampleBandEvent();
         when(bandEventRepository.save(sampleEvent)).thenReturn(sampleEvent);
 
         // When: calling the service method
@@ -89,7 +82,7 @@ class BandEventServiceTest {
     @Test
     void testDeleteEventById() {
         // Given: a mock repository with one sample BandEvent
-        BandEvent sampleEvent = getMockBandEvent();
+        BandEvent sampleEvent = getSampleBandEvent();
         //bandEventRepository.deleteById(sampleEvent.getId());
 
         // When: calling the service method
