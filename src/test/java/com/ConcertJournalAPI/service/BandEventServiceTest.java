@@ -1,5 +1,6 @@
 package com.ConcertJournalAPI.service;
 
+import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.BandEventRepository;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,6 +40,7 @@ class BandEventServiceTest {
         BandEvent mockEvent = Mockito.mock(BandEvent.class);
         Long randomId = (long) (Math.random() * 1000);
         Mockito.when(mockEvent.getId()).thenReturn(randomId);
+        when(mockEvent.getAppUser()).thenReturn(mock(AppUser.class));
         return mockEvent;
     }
 
