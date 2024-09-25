@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@Disabled
 public class CustomUserDetailsServiceTest {
 
     @InjectMocks
