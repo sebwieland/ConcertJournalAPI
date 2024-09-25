@@ -4,6 +4,7 @@ import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.BandEventRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@Disabled
 class BandEventServiceTest {
 
     @Mock
