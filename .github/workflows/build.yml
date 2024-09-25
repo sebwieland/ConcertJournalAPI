@@ -19,6 +19,13 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
           cache: 'maven'
+      - name: Setup Maven
+        uses: s4u/setup-maven-action@v1.7.0
+        with:
+          checkout-fetch-depth: 0
+          java-version: 8
+          java-distribution: temurin
+          maven-version: 3.9.9
       - run: mvn --version
       - run: mvn -f pom.xml clean test
       - run: mvn jacoco:report
