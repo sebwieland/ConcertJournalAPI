@@ -21,7 +21,7 @@ public class AppUser {
     @NotBlank(message = "Username is required.")
     private String username;
     private String password;
-    @NotBlank(message = "Email is required.")
+    //@NotBlank(message = "Email is required.")
     private String email;
     private String firstName;
     private String lastName;
