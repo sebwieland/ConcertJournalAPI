@@ -29,6 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(PasswordConfig.class)
 public class SecurityConfigurationTest {
 
+    private static final String TEST_USERNAME = "admin@example.com";
+    private static final String TEST_PASSWORD = "password";
+    private static final String TEST_ROLE = "USER";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -42,7 +46,7 @@ public class SecurityConfigurationTest {
     private UserRepository userRepository;
 
     @Test
-    @WithMockUser(username = "admin@example.com", password = "password", roles = "USER")
+    @WithMockUser(username = TEST_USERNAME, password = TEST_PASSWORD, roles = TEST_ROLE)
     public void testAuthorizedAccess() throws Exception {
         mockMvc.perform(get("/events"))
                 .andExpect(status().isOk());
@@ -67,9 +71,8 @@ public class SecurityConfigurationTest {
     public void testPasswordHashing() {
         // Create a new user with a password
         AppUser user = new AppUser();
-        user.setPassword("password");
-        user.setUsername("user");
-        user.setEmail("user@example.com");
+        user.setPassword(TEST_PASSWORD);
+        user.setEmail(TEST_USERNAME);
 
         // Hash the password
         String hashedPassword = passwordEncoder.encode(user.getPassword());
@@ -82,7 +85,7 @@ public class SecurityConfigurationTest {
     }
 
     @Test
-    @WithMockUser(username = "admin@example.com", password = "password", roles = "USER")
+    @WithMockUser(username = TEST_USERNAME, password = TEST_PASSWORD, roles = TEST_ROLE)
     public void testLogout() throws Exception {
         mockMvc.perform(logout())
                 .andExpect(status().isFound())
