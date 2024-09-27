@@ -4,6 +4,8 @@ import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.BandEventRepository;
 import com.ConcertJournalAPI.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,9 +18,9 @@ import java.util.stream.IntStream;
 @Component
 public class DataLoader implements CommandLineRunner {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final BandEventRepository bandEventRepository;
 
     @Autowired
     public DataLoader(UserRepository userRepository,
@@ -26,14 +28,13 @@ public class DataLoader implements CommandLineRunner {
                       BandEventRepository bandEventRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.bandEventRepository = bandEventRepository;
     }
 
     @Override
     public void run(String... args) {
-         userRepository.delete(userRepository.findByUsername("admin"));
+//         userRepository.delete(userRepository.findByEmail("admin@example.com"));
         // Check if users already exist
-        if (!userRepository.existsAppUserByUsername("admin")) {
+        if (!userRepository.existsAppUserByEmail("admin@example.com")) {
             // Create default user
             AppUser user = new AppUser();
             user.setUsername("admin");
@@ -42,9 +43,9 @@ public class DataLoader implements CommandLineRunner {
             user.setEmail("admin@example.com");
             userRepository.save(user);
 
-            System.out.println("Default user created with username 'admin' and password 'password'");
+            LOGGER.info("Default admin user created with username 'admin@example.com' and password 'password'");
         } else {
-            System.out.println("Default user already exists");
+            LOGGER.info("Default admin user already exists with username 'admin@example.com' and password 'password'");
         }
 
         // IntStream.range(0, 10) // replace N with the desired number of dummy events
