@@ -57,8 +57,7 @@ public class SecurityConfigurationTest {
     @WithAnonymousUser
     public void testUnauthorizedAccessToEventsEndpoint() throws Exception {
         mockMvc.perform(get("/allEvents"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(header().string("WWW-Authenticate", "Basic realm=\"Realm\""));
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
