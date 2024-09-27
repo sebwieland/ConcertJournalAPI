@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -21,8 +22,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = BandEventController.class)
 @AutoConfigureMockMvc
@@ -46,17 +46,19 @@ public class SecurityConfigurationTest {
     private UserRepository userRepository;
 
     @Test
-    @WithMockUser(username = TEST_USERNAME, password = TEST_PASSWORD, roles = TEST_ROLE)
-    public void testAuthorizedAccess() throws Exception {
+    @WithMockUser(username = TEST_USERNAME, roles = TEST_ROLE)
+    public void testAuthorizedAccessToEventsEndpoint() throws Exception {
         mockMvc.perform(get("/events"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
     @WithAnonymousUser
-    public void testUnauthorizedAccess() throws Exception {
+    public void testUnauthorizedAccessToEventsEndpoint() throws Exception {
         mockMvc.perform(get("/events"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string("WWW-Authenticate", "Basic realm=\"Realm\""));
     }
 
     @Test
@@ -72,7 +74,6 @@ public class SecurityConfigurationTest {
         // Create a new user with a password
         AppUser user = new AppUser();
         user.setPassword(TEST_PASSWORD);
-        user.setEmail(TEST_USERNAME);
 
         // Hash the password
         String hashedPassword = passwordEncoder.encode(user.getPassword());
@@ -85,10 +86,11 @@ public class SecurityConfigurationTest {
     }
 
     @Test
-    @WithMockUser(username = TEST_USERNAME, password = TEST_PASSWORD, roles = TEST_ROLE)
-    public void testLogout() throws Exception {
+    @WithMockUser(username = TEST_USERNAME, roles = TEST_ROLE)
+    public void testLogoutRedirectsToLoginPage() throws Exception {
         mockMvc.perform(logout())
                 .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/login?logout"));
+                .andExpect(redirectedUrl("/login?logout"))
+                .andExpect(header().string("Location", "/login?logout"));
     }
 }
