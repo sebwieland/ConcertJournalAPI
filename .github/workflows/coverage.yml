@@ -6,7 +6,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Query coverage information
+    name: Query coverage information for PR
     permissions:
       pull-requests: write
     steps:
