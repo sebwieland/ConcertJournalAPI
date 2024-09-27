@@ -86,10 +86,8 @@ public class SecurityConfigurationTest {
 
     @Test
     @WithMockUser(username = TEST_USERNAME, roles = TEST_ROLE)
-    public void testLogoutRedirectsToLoginPage() throws Exception {
+    public void testLogoutWorks() throws Exception {
         mockMvc.perform(logout())
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/login?logout"))
-                .andExpect(header().string("Location", "/login?logout"));
+                .andExpect(status().isOk());
     }
 }
