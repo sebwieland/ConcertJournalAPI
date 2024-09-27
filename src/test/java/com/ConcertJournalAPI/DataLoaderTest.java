@@ -30,7 +30,7 @@ public class DataLoaderTest {
     @Test
     public void testCreateDefaultUser() {
         // Arrange
-        when(userRepository.existsAppUserByUsername("admin")).thenReturn(false);
+        when(userRepository.existsAppUserByEmail("admin@example.com")).thenReturn(false);
 
         // Act
         dataLoader.run();
@@ -42,7 +42,7 @@ public class DataLoaderTest {
     @Test
     public void testDefaultUserAlreadyExists() {
         // Arrange
-        when(userRepository.existsAppUserByUsername("admin")).thenReturn(true);
+        when(userRepository.existsAppUserByEmail("admin@example.com")).thenReturn(true);
 
         // Act
         dataLoader.run();
