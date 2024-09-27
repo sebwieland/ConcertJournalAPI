@@ -23,7 +23,7 @@ public class BandEventController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/AllEvents")
+    @GetMapping("/allEvents")
     public List<BandEvent> getAllEvents() {
         return bandEventService.getAllEvents();
     }

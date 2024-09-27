@@ -47,8 +47,8 @@ public class SecurityConfigurationTest {
 
     @Test
     @WithMockUser(username = TEST_USERNAME, roles = TEST_ROLE)
-    public void testAuthorizedAccessToEventsEndpoint() throws Exception {
-        mockMvc.perform(get("/events"))
+    public void testAuthorizedAccessToEventEndpoint() throws Exception {
+        mockMvc.perform(get("/allEvents"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -56,7 +56,7 @@ public class SecurityConfigurationTest {
     @Test
     @WithAnonymousUser
     public void testUnauthorizedAccessToEventsEndpoint() throws Exception {
-        mockMvc.perform(get("/events"))
+        mockMvc.perform(get("/allEvents"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(header().string("WWW-Authenticate", "Basic realm=\"Realm\""));
     }
@@ -64,7 +64,7 @@ public class SecurityConfigurationTest {
     @Test
     @Disabled
     public void testCsrfProtection() throws Exception {
-        mockMvc.perform(post("/events")
+        mockMvc.perform(post("/allEvents")
                         .with(csrf().useInvalidToken()))
                 .andExpect(status().isForbidden());
     }
