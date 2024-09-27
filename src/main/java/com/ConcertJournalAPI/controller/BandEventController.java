@@ -16,7 +16,6 @@ import java.util.List;
 //@CrossOrigin(origins = "http://localhost:3000")
 @Validated
 @RestController
-@RequestMapping("/events")
 public class BandEventController {
     @Autowired
     private BandEventService bandEventService;
@@ -24,24 +23,24 @@ public class BandEventController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping
+    @GetMapping("/AllEvents")
     public List<BandEvent> getAllEvents() {
         return bandEventService.getAllEvents();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/event/{id}")
     public BandEvent getEventById(@PathVariable Long id) {
         return bandEventService.getEventById(id);
     }
 
-    @PostMapping
+    @PostMapping("/event")
     public BandEvent createEvent(@RequestBody @Valid BandEvent bandEvent, @AuthenticationPrincipal UserDetails userDetails) {
         AppUser appUser = userRepository.findByUsername(userDetails.getUsername());
         bandEvent.setAppUser(appUser);
         return bandEventService.saveEvent(bandEvent);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("event/{id}")
     public void deleteEvent(@PathVariable Long id) {
         bandEventService.deleteEventById(id);
     }
