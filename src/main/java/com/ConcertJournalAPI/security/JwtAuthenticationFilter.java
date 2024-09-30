@@ -1,5 +1,6 @@
 package com.ConcertJournalAPI.security;
 
+import com.ConcertJournalAPI.configuration.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -25,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = JwtUtils.extractTokenFromRequest(request);
         if (token != null) {
             try {
-                Claims claims = JwtUtils.parseToken(token);
+                Claims claims = JwtUtils.parseToken(token, SecurityConstants.JWT_SECRET);
                 authenticateUser(claims);
             } catch (JwtException e) {
                 handleInvalidToken(response);
