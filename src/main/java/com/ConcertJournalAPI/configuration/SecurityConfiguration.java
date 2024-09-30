@@ -48,6 +48,9 @@ public class SecurityConfiguration {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
@@ -114,26 +117,30 @@ public class SecurityConfiguration {
                     Claims claims = parseToken(token);
                     authenticateUser(claims);
                 } catch (JwtException e) {
-                    handleInvalidToken(response, e);
+                    handleInvalidToken(response);
                 }
             }
             filterChain.doFilter(request, response);
         }
 
         private String extractTokenFromRequest(HttpServletRequest request) {
-            String token = request.getHeader("Authorization");
-            if (token != null && token.startsWith("Bearer ")) {
-                return token.substring(7);
+            String token = request.getHeader(AUTHORIZATION_HEADER);
+            if (token != null && token.startsWith(BEARER_PREFIX)) {
+                return token.substring(BEARER_PREFIX.length());
             }
             return null;
         }
 
-        private Claims parseToken(String token) {
-            return Jwts.parser()
+        private Claims parseToken(String token) throws JwtException {
+            Claims claims = Jwts.parser()
                     .verifyWith(getSigningKey(jwtSecret))
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
+            if (claims.getExpiration().before(new Date())) {
+                throw new JwtException("Token has expired");
+            }
+            return claims;
         }
 
         private void authenticateUser(Claims claims) {
@@ -142,9 +149,15 @@ public class SecurityConfiguration {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        private void handleInvalidToken(HttpServletResponse response, JwtException e) {
-            // Log the error and return a meaningful error response
+        private void handleInvalidToken(HttpServletResponse response) {
+            logger.error("Invalid token: {}");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            try {
+                response.getWriter().write("{\"error\":\"Invalid token\"}");
+            } catch (IOException ex) {
+                logger.error("Error writing response: {}");
+            }
         }
     }
 
