@@ -12,7 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
-import static com.ConcertJournalAPI.configuration.SecurityConstants.JWT_SECRET;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -52,7 +51,7 @@ public class SecurityConfiguration {
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new AuthHandlers.CustomAuthenticationEntryPoint()))
 
-                .addFilterBefore(new JwtAuthenticationFilter(JWT_SECRET), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
