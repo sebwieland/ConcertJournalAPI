@@ -25,12 +25,15 @@ class JwtUtils {
         return null;
     }
 
-    public static Claims parseToken(String token) throws JwtException {
+    public static Claims parseToken(String token, String secretKey) throws JwtException {
         Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey(JWT_SECRET))
+                .verifyWith(getSigningKey(secretKey))
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+        if (claims == null) {
+            throw new JwtException("Invalid token");
+        }
         if (claims.getExpiration().before(new Date())) {
             throw new JwtException("Token has expired");
         }
