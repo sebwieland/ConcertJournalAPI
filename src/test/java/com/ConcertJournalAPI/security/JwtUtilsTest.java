@@ -3,7 +3,7 @@ package com.ConcertJournalAPI.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.crypto.SecretKey;
-import java.io.IOException;
 import java.util.Date;
 
 import static com.ConcertJournalAPI.configuration.SecurityConstants.*;
@@ -61,24 +60,16 @@ class JwtUtilsTest {
     }
 
     @Test
-    void testParseToken() throws JwtException {
-        String token = Jwts.builder()
-                .setSubject("test-subject")
-                .setExpiration(new Date(System.currentTimeMillis() + 10000))
-                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
-                .compact();
+    void testParseTokenValidToken() throws JwtException {
+        String token = generateToken(jwtSecret, "test-subject", 10000);
         Claims claims = JwtUtils.parseToken(token, jwtSecret);
         assertNotNull(claims);
         assertEquals("test-subject", claims.getSubject());
     }
 
     @Test
-    void testParseTokenExpired() {
-        String token = Jwts.builder()
-                .setSubject("test-subject")
-                .setExpiration(new Date(System.currentTimeMillis() - 10000))
-                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
-                .compact();
+    void testParseTokenExpiredToken() {
+        String token = generateToken(jwtSecret, "test-subject", -1);
         assertThrows(JwtException.class, () -> JwtUtils.parseToken(token, jwtSecret));
     }
 
@@ -87,4 +78,23 @@ class JwtUtilsTest {
         String token = "Invalid token";
         assertThrows(JwtException.class, () -> JwtUtils.parseToken(token, jwtSecret));
     }
+
+    @Test
+    public void testParseTokenNullClaims() {
+        String token = Jwts.builder()
+                .signWith(JwtUtils.getSigningKey(jwtSecret), SignatureAlgorithm.HS256)
+                .compact();
+        assertThrows(JwtException.class, () -> JwtUtils.parseToken(token, jwtSecret));
+    }
+
+    private String generateToken(String secretKey, String subject, long expirationTime) {
+        Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
+        return Jwts.builder()
+                .setSubject(subject)
+                .setExpiration(expirationDate)
+                .signWith(JwtUtils.getSigningKey(secretKey), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+
 }

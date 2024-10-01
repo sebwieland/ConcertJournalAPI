@@ -37,6 +37,9 @@ class JwtUtils {
         if (claims.getExpiration().before(new Date())) {
             throw new JwtException("Token has expired");
         }
+        if (claims.getExpiration() == null) {
+            throw new JwtException("Token has no expiration date");
+        }
         return claims;
     }
 
