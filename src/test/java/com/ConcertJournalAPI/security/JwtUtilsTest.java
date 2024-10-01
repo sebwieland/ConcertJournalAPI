@@ -1,5 +1,6 @@
 package com.ConcertJournalAPI.security;
 
+import com.ConcertJournalAPI.configuration.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -8,8 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -27,6 +30,9 @@ class JwtUtilsTest {
 
     @Mock
     private HttpServletRequest request;
+
+    @Mock
+    private Authentication authentication;
 
     @BeforeEach
     void setup() {
@@ -94,6 +100,41 @@ class JwtUtilsTest {
                 .setExpiration(expirationDate)
                 .signWith(JwtUtils.getSigningKey(secretKey), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    @Test
+    void testGenerateToken() {
+        when(authentication.getName()).thenReturn("testUser");
+        String token = JwtUtils.generateToken(authentication, jwtSecret);
+        assertNotNull(token);
+        assertNotEquals("", token);
+    }
+
+    @Test
+    void testGeneratedTokenCanBeParsed() throws JwtException {
+        when(authentication.getName()).thenReturn("testUser");
+
+        String token = JwtUtils.generateToken(authentication, jwtSecret);
+        Claims claims = JwtUtils.parseToken(token, jwtSecret);
+
+        assertNotNull(claims);
+        assertEquals("testUser", claims.getSubject());
+        assertTrue(claims.getIssuedAt().before(new Date()));
+        assertTrue(claims.getExpiration().after(new Date()));
+    }
+
+
+    @Test
+    void testGeneratedTokenHasCorrectExpiration() throws JwtException {
+        when(authentication.getName()).thenReturn("testUser");
+        long now = new Date().getTime();
+
+        String token = JwtUtils.generateToken(authentication, jwtSecret);
+        Claims claims = JwtUtils.parseToken(token, jwtSecret);
+
+        long expiration = claims.getExpiration().getTime();
+        assertTrue(expiration > now);
+        assertTrue(expiration < now + 86400000); // 1 day
     }
 
 

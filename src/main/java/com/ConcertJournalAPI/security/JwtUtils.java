@@ -15,12 +15,12 @@ import static com.ConcertJournalAPI.configuration.SecurityConstants.*;
 
 class JwtUtils {
 
-    public static String generateToken(Authentication authentication) {
+    public static String generateToken(Authentication authentication, String jwtSecret) {
         return Jwts.builder()
                 .subject(authentication.getName())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + 86400000)) // 1 day
-                .signWith(getSigningKey(JWT_SECRET))
+                .signWith(getSigningKey(jwtSecret))
                 .compact();
     }
 
