@@ -1,6 +1,5 @@
 package com.ConcertJournalAPI.security;
 
-import com.ConcertJournalAPI.configuration.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -9,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
@@ -68,7 +66,7 @@ class JwtUtilsTest {
     @Test
     void testParseTokenValidToken() throws JwtException {
         String token = generateToken(jwtSecret, "test-subject", 10000);
-        Claims claims = JwtUtils.parseToken(token, jwtSecret);
+        Claims claims = JwtUtils.parseToken(token);
         assertNotNull(claims);
         assertEquals("test-subject", claims.getSubject());
     }
@@ -76,13 +74,13 @@ class JwtUtilsTest {
     @Test
     void testParseTokenExpiredToken() {
         String token = generateToken(jwtSecret, "test-subject", -1);
-        assertThrows(JwtException.class, () -> JwtUtils.parseToken(token, jwtSecret));
+        assertThrows(JwtException.class, () -> JwtUtils.parseToken(token));
     }
 
     @Test
     void testParseTokenInvalid() {
         String token = "Invalid token";
-        assertThrows(JwtException.class, () -> JwtUtils.parseToken(token, jwtSecret));
+        assertThrows(JwtException.class, () -> JwtUtils.parseToken(token));
     }
 
     @Test
@@ -90,7 +88,7 @@ class JwtUtilsTest {
         String token = Jwts.builder()
                 .signWith(JwtUtils.getSigningKey(jwtSecret), SignatureAlgorithm.HS256)
                 .compact();
-        assertThrows(JwtException.class, () -> JwtUtils.parseToken(token, jwtSecret));
+        assertThrows(JwtException.class, () -> JwtUtils.parseToken(token));
     }
 
     private String generateToken(String secretKey, String subject, long expirationTime) {
@@ -105,7 +103,7 @@ class JwtUtilsTest {
     @Test
     void testGenerateToken() {
         when(authentication.getName()).thenReturn("testUser");
-        String token = JwtUtils.generateToken(authentication, jwtSecret);
+        String token = JwtUtils.generateToken(authentication);
         assertNotNull(token);
         assertNotEquals("", token);
     }
@@ -114,8 +112,8 @@ class JwtUtilsTest {
     void testGeneratedTokenCanBeParsed() throws JwtException {
         when(authentication.getName()).thenReturn("testUser");
 
-        String token = JwtUtils.generateToken(authentication, jwtSecret);
-        Claims claims = JwtUtils.parseToken(token, jwtSecret);
+        String token = JwtUtils.generateToken(authentication);
+        Claims claims = JwtUtils.parseToken(token);
 
         assertNotNull(claims);
         assertEquals("testUser", claims.getSubject());
@@ -129,8 +127,8 @@ class JwtUtilsTest {
         when(authentication.getName()).thenReturn("testUser");
         long now = new Date().getTime();
 
-        String token = JwtUtils.generateToken(authentication, jwtSecret);
-        Claims claims = JwtUtils.parseToken(token, jwtSecret);
+        String token = JwtUtils.generateToken(authentication);
+        Claims claims = JwtUtils.parseToken(token);
 
         long expiration = claims.getExpiration().getTime();
         assertTrue(expiration > now);

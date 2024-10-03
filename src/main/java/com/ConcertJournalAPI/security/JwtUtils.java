@@ -14,8 +14,10 @@ import java.util.Date;
 import static com.ConcertJournalAPI.configuration.SecurityConstants.*;
 
 class JwtUtils {
+    private static final String jwtSecret = System.getenv("JWT_SECRET");
 
-    public static String generateToken(Authentication authentication, String jwtSecret) {
+
+    public static String generateToken(Authentication authentication) {
         return Jwts.builder()
                 .subject(authentication.getName())
                 .issuedAt(new Date())
@@ -36,9 +38,9 @@ class JwtUtils {
         return null;
     }
 
-    public static Claims parseToken(String token, String secretKey) throws JwtException {
+    public static Claims parseToken(String token) throws JwtException {
         return Jwts.parser()
-                .verifyWith(getSigningKey(secretKey))
+                .verifyWith(getSigningKey(jwtSecret))
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
