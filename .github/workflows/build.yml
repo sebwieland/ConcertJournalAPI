@@ -13,6 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     name: Run unit tests on ${{ matrix.os }} with Java ${{ matrix.java }}
+    env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup java
@@ -22,6 +24,7 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
       - run: mvn --version
+      - run: echo $JWT_SECRET
       - run: mvn -f pom.xml clean test
       - run: mvn jacoco:report
       - name: Upload code coverage report
