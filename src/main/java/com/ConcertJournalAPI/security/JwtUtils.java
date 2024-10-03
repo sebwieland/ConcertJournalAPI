@@ -22,11 +22,11 @@ class JwtUtils {
                 .subject(authentication.getName())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + 86400000)) // 1 day
-                .signWith(getSigningKey(jwtSecret))
+                .signWith(getSigningKey())
                 .compact();
     }
 
-    static SecretKey getSigningKey(String jwtSecret) {
+    static SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
@@ -40,7 +40,7 @@ class JwtUtils {
 
     public static Claims parseToken(String token) throws JwtException {
         return Jwts.parser()
-                .verifyWith(getSigningKey(jwtSecret))
+                .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

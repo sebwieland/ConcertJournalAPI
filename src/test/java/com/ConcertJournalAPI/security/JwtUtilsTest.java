@@ -5,7 +5,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -22,29 +21,21 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class JwtUtilsTest {
 
-    private final String jwtSecret = "QXUH21ujrFnMDl4IT90PzBeTI21E5z4soM+gbJu7hm8=\"";
-
-    private static final String TEST_TOKEN = "Bearer test-token";
-
     @Mock
     private HttpServletRequest request;
 
     @Mock
     private Authentication authentication;
 
-    @BeforeEach
-    void setup() {
-    }
-
     @Test
     void testGetSigningKey() {
-        SecretKey signingKey = JwtUtils.getSigningKey(jwtSecret);
+        SecretKey signingKey = JwtUtils.getSigningKey();
         assertNotNull(signingKey);
     }
 
     @Test
     void testExtractTokenFromRequest() {
-        when(request.getHeader(AUTHORIZATION_HEADER)).thenReturn(TEST_TOKEN);
+        when(request.getHeader(AUTHORIZATION_HEADER)).thenReturn("Bearer test-token");
         String token = JwtUtils.extractTokenFromRequest(request);
         assertEquals("test-token", token);
     }
@@ -65,7 +56,7 @@ class JwtUtilsTest {
 
     @Test
     void testParseTokenValidToken() throws JwtException {
-        String token = generateToken(jwtSecret, "test-subject", 10000);
+        String token = generateToken("test-subject", 10000);
         Claims claims = JwtUtils.parseToken(token);
         assertNotNull(claims);
         assertEquals("test-subject", claims.getSubject());
@@ -73,7 +64,7 @@ class JwtUtilsTest {
 
     @Test
     void testParseTokenExpiredToken() {
-        String token = generateToken(jwtSecret, "test-subject", -1);
+        String token = generateToken("test-subject", -1);
         assertThrows(JwtException.class, () -> JwtUtils.parseToken(token));
     }
 
@@ -86,17 +77,17 @@ class JwtUtilsTest {
     @Test
     public void testParseTokenNullClaims() {
         String token = Jwts.builder()
-                .signWith(JwtUtils.getSigningKey(jwtSecret), SignatureAlgorithm.HS256)
+                .signWith(JwtUtils.getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
         assertThrows(JwtException.class, () -> JwtUtils.parseToken(token));
     }
 
-    private String generateToken(String secretKey, String subject, long expirationTime) {
+    private String generateToken(String subject, long expirationTime) {
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
         return Jwts.builder()
                 .setSubject(subject)
                 .setExpiration(expirationDate)
-                .signWith(JwtUtils.getSigningKey(secretKey), SignatureAlgorithm.HS256)
+                .signWith(JwtUtils.getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
