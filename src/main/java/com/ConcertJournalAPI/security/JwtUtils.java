@@ -39,11 +39,15 @@ class JwtUtils {
     }
 
     public static Claims parseToken(String token) throws JwtException {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (IllegalArgumentException e) {
+            throw new JwtException("Invalid token", e);
+        }
     }
 
 }
