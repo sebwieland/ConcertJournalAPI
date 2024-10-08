@@ -27,20 +27,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 Claims claims = JwtUtils.parseToken(token);
                 authenticateUser(claims);
+                filterChain.doFilter(request, response);
             } catch (JwtException e) {
                 handleInvalidToken(response);
             }
         }
-        filterChain.doFilter(request, response);
+        else {
+            handleInvalidToken(response);
+        }
     }
 
-    private void authenticateUser(Claims claims) {
+    void authenticateUser(Claims claims) {
         String username = claims.getSubject();
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    private void handleInvalidToken(HttpServletResponse response) {
+    void handleInvalidToken(HttpServletResponse response) {
         logger.error("Invalid token: {}");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
