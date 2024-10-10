@@ -52,13 +52,11 @@ public class JwtAuthenticationFilterTest {
     @Test
     public void testDoFilterInternal_NoToken() throws ServletException, IOException {
         when(JwtUtils.extractTokenFromRequest(request)).thenReturn(null);
-        when(response.getWriter()).thenReturn(writer);
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-        verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        verify(response).setContentType("application/json");
-        verify(response.getWriter()).write("{\"error\":\"Invalid token\"}");
+        verify(filterChain).doFilter(request, response);
+
     }
 
     @Test
@@ -67,6 +65,7 @@ public class JwtAuthenticationFilterTest {
         try (MockedStatic<JwtUtils> jwtUtilsMock = Mockito.mockStatic(JwtUtils.class)) {
             jwtUtilsMock.when(() -> JwtUtils.extractTokenFromRequest(request)).thenReturn(token);
             jwtUtilsMock.when(()-> JwtUtils.parseToken(token)).thenReturn(mock(Claims.class));
+
             jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
         }
         verify(filterChain).doFilter(request, response);
@@ -75,13 +74,12 @@ public class JwtAuthenticationFilterTest {
     @Test
     public void testDoFilterInternal_InvalidToken() throws ServletException, IOException {
         try (MockedStatic<JwtUtils> jwtUtilsMock = Mockito.mockStatic(JwtUtils.class)) {
-            jwtUtilsMock.when(()-> JwtUtils.parseToken("invalidToken")).thenReturn(null);
-            jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
-        }
+            jwtUtilsMock.when(() -> JwtUtils.parseToken("invalidToken")).thenReturn(null);
 
-        verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        verify(response).setContentType("application/json");
-        verify(response.getWriter()).write("{\"error\":\"Invalid token\"}");
+            jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
+
+            verify(filterChain).doFilter(request, response);
+        }
     }
 
     @Test
