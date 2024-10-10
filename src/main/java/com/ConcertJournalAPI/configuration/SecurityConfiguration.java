@@ -46,6 +46,7 @@ public class SecurityConfiguration {
                         .usernameParameter("email")
                         .successHandler(new AuthSuccessHandler())
                         .failureHandler(new AuthFailureHandler())
+                        .loginPage("/login")
                 )
 
                 // Authorize requests

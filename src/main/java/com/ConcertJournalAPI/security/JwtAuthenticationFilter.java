@@ -27,14 +27,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 Claims claims = JwtUtils.parseToken(token);
                 authenticateUser(claims);
-                filterChain.doFilter(request, response);
             } catch (JwtException e) {
-                handleInvalidToken(response);
+                // Ignore invalid token and let Spring Security handle it
             }
         }
-        else {
-            handleInvalidToken(response);
-        }
+        filterChain.doFilter(request, response);
     }
 
     void authenticateUser(Claims claims) {
