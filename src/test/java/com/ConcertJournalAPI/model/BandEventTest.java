@@ -5,7 +5,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.validation.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -186,29 +185,25 @@ class BandEventTest {
     }
 
     @Test
-    @Disabled
-    public void testCreationDate() throws InterruptedException {
+    public void testCreationDate() {
         BandEvent event = new BandEvent();
         Instant before = Instant.now();
         // Simulate persisting the event
         event.setCreationDate(before);
-        Thread.sleep(2000);
-        Instant after = Instant.now();
+        Instant after = before.plusSeconds(2);
+
         assertNotNull(event.getCreationDate());
-        Assertions.assertTrue(event.getCreationDate().isAfter(before));
         Assertions.assertTrue(event.getCreationDate().isBefore(after));
     }
 
     @Test
-    @Disabled
-    public void testModificationDate() throws InterruptedException {
+    public void testModificationDate() {
         BandEvent event = new BandEvent();
         Instant before = Instant.now();
         // Simulate updating the event
         event.setModificationDate(Instant.now());
-        // wait for 2 seconds
-        Thread.sleep(2000);
-        Instant after = Instant.now();
+        Instant after = before.plusSeconds(2);
+
         assertNotNull(event.getModificationDate());
         Assertions.assertTrue(event.getModificationDate().isAfter(before));
         Assertions.assertTrue(event.getModificationDate().isBefore(after));
