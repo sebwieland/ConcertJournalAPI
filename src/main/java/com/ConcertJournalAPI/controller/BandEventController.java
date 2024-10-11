@@ -24,8 +24,9 @@ public class BandEventController {
     private UserRepository userRepository;
 
     @GetMapping("/allEvents")
-    public List<BandEvent> getAllEvents() {
-        return bandEventService.getAllEvents();
+    public List<BandEvent> getAllEvents(@AuthenticationPrincipal UserDetails userDetails) {
+        AppUser appUser = userRepository.findByUsername(userDetails.getUsername());
+        return bandEventService.getAllEventsForCurrentUser(appUser);
     }
 
     @GetMapping("/event/{id}")
