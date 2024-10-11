@@ -28,6 +28,12 @@ class BandEventControllerTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private AppUser appUser;
+
+    @Mock
+    private UserDetails userDetails;
+
     @InjectMocks
     private BandEventController bandEventController;
 
@@ -36,27 +42,34 @@ class BandEventControllerTest {
 
     @BeforeEach
     void setup() {
+
+
         bandEvent1 = new BandEvent();
         bandEvent1.setBandName("TestBand1");
         bandEvent1.setPlace("TestPlace1");
         bandEvent1.setDate(LocalDate.now());
+        bandEvent1.setAppUser(appUser);
 
         bandEvent2 = new BandEvent();
         bandEvent2.setBandName("TestBand1");
         bandEvent2.setPlace("TestPlace1");
         bandEvent2.setDate(LocalDate.now());
+        bandEvent2.setAppUser(appUser);
+
 
     }
 
     @Test
     void testGetAllEvents() {
         List<BandEvent> events = Arrays.asList(bandEvent1, bandEvent2);
-        when(bandEventService.getAllEvents()).thenReturn(events);
+        when(bandEventService.getAllEventsForCurrentUser(appUser)).thenReturn(events);
+        when(userDetails.getUsername()).thenReturn("TestUser");
+        when(userRepository.findByUsername(userDetails.getUsername())).thenReturn(appUser);
 
-        List<BandEvent> response = bandEventController.getAllEvents();
+        List<BandEvent> response = bandEventController.getAllEvents(userDetails);
 
         assertEquals(events, response);
-        verify(bandEventService).getAllEvents();
+        verify(bandEventService).getAllEventsForCurrentUser(appUser);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.ConcertJournalAPI.service;
 
+import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.BandEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,10 @@ public class BandEventService {
 
     public List<BandEvent> getAllEvents() {
         return bandEventRepository.findAll();
+    }
+
+    public List<BandEvent> getAllEventsForCurrentUser(AppUser user) {
+        return bandEventRepository.findAllByAppUser(user);
     }
 
     public BandEvent getEventById(Long id) {
