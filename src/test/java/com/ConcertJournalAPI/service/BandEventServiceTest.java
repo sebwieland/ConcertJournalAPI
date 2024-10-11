@@ -47,6 +47,20 @@ class BandEventServiceTest {
     }
 
     @Test
+    void testGetAllEventsForCurrentUser() {
+        // Arrange
+        AppUser user = new AppUser();
+        List<BandEvent> expectedEvents = List.of(new BandEvent(), new BandEvent());
+        when(bandEventRepository.findAllByAppUser(user)).thenReturn(expectedEvents);
+
+        // Act
+        List<BandEvent> actualEvents = bandEventService.getAllEventsForCurrentUser(user);
+
+        // Assert
+        assertEquals(expectedEvents, actualEvents);
+    }
+
+    @Test
     void testGetEventById() {
         //Given: a mock repository with one sample BandEvent
         BandEvent sampleEvent = getSampleBandEvent();
