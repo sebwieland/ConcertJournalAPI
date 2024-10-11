@@ -57,7 +57,8 @@ public class SecurityConfigurationTest {
     @WithAnonymousUser
     public void testUnauthorizedAccessToEventsEndpoint() throws Exception {
         mockMvc.perform(get("/allEvents"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrlPattern("**/login"));
     }
 
     @Test
