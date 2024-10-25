@@ -10,15 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 
     @Bean
@@ -28,6 +28,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        AuthSuccessHandler authSuccessHandler = new AuthSuccessHandler();
         http
                 // Enable CORS
                 .cors(cors -> CorsConfig.corsConfigurationSource())
@@ -56,13 +57,13 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 // Use HTTP Basic Authentication (for simplicity)
-                .httpBasic(withDefaults())
+                //.httpBasic(withDefaults())
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 )
 
-                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(authSuccessHandler), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

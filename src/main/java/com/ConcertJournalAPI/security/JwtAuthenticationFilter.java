@@ -16,8 +16,10 @@ import java.io.IOException;
 import java.util.Collections;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final AuthSuccessHandler authSuccessHandler;
 
-    public JwtAuthenticationFilter() {
+    public JwtAuthenticationFilter(AuthSuccessHandler authSuccessHandler) {
+        this.authSuccessHandler = authSuccessHandler;
     }
 
     @Override

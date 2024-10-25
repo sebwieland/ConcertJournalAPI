@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class BandEventControllerTest {
 
+    public static final String TEST_USERNAME = "testUsername";
     @Mock
     private BandEventService bandEventService;
 
@@ -29,7 +30,10 @@ class BandEventControllerTest {
     private UserRepository userRepository;
 
     @Mock
-    private AppUser appUser;
+    private AppUser appUser1;
+
+    @Mock
+    private AppUser appUser2;
 
     @Mock
     private UserDetails userDetails;
@@ -39,37 +43,39 @@ class BandEventControllerTest {
 
     private BandEvent bandEvent1;
     private BandEvent bandEvent2;
+    private BandEvent bandEvent3;
 
     @BeforeEach
     void setup() {
-
 
         bandEvent1 = new BandEvent();
         bandEvent1.setBandName("TestBand1");
         bandEvent1.setPlace("TestPlace1");
         bandEvent1.setDate(LocalDate.now());
-        bandEvent1.setAppUser(appUser);
+        bandEvent1.setAppUser(appUser1);
 
         bandEvent2 = new BandEvent();
-        bandEvent2.setBandName("TestBand1");
-        bandEvent2.setPlace("TestPlace1");
+        bandEvent2.setBandName("TestBand2");
+        bandEvent2.setPlace("TestPlace2");
         bandEvent2.setDate(LocalDate.now());
-        bandEvent2.setAppUser(appUser);
+        bandEvent2.setAppUser(appUser1);
 
+        bandEvent3 = new BandEvent();
+        bandEvent3.setBandName("TestBand3");
+        bandEvent3.setPlace("TestPlace3");
+        bandEvent3.setDate(LocalDate.now());
+        bandEvent3.setAppUser(appUser2);
 
     }
 
     @Test
     void testGetAllEvents() {
         List<BandEvent> events = Arrays.asList(bandEvent1, bandEvent2);
-        when(bandEventService.getAllEventsForCurrentUser(appUser)).thenReturn(events);
-        when(userDetails.getUsername()).thenReturn("TestUser");
-        when(userRepository.findByUsername(userDetails.getUsername())).thenReturn(appUser);
+        when(userRepository.findByUsername(TEST_USERNAME)).thenReturn(appUser1);
+        when(bandEventService.getAllEventsForCurrentUser(appUser1)).thenReturn(events);
 
-        List<BandEvent> response = bandEventController.getAllEvents(userDetails);
-
+        List<BandEvent> response = bandEventController.getAllEvents(TEST_USERNAME);
         assertEquals(events, response);
-        verify(bandEventService).getAllEventsForCurrentUser(appUser);
     }
 
     @Test
@@ -85,11 +91,9 @@ class BandEventControllerTest {
     @Test
     void testCreateEvent() {
         when(bandEventService.saveEvent(bandEvent1)).thenReturn(bandEvent1);
-        when(userRepository.findByUsername(anyString())).thenReturn(new AppUser());
-        UserDetails userDetails = mock(UserDetails.class);
-        when(userDetails.getUsername()).thenReturn("testUsername");
+        when(userRepository.findByUsername(anyString())).thenReturn(appUser1);
 
-        BandEvent response = bandEventController.createEvent(bandEvent1, userDetails);
+        BandEvent response = bandEventController.createEvent(bandEvent1, TEST_USERNAME);
 
         assertEquals(bandEvent1, response);
         verify(bandEventService).saveEvent(bandEvent1);

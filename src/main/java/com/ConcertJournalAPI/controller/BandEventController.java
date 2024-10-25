@@ -7,13 +7,11 @@ import com.ConcertJournalAPI.service.BandEventService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@CrossOrigin(origins = "http://localhost:3000")
 @Validated
 @RestController
 public class BandEventController {
@@ -24,8 +22,8 @@ public class BandEventController {
     private UserRepository userRepository;
 
     @GetMapping("/allEvents")
-    public List<BandEvent> getAllEvents(@AuthenticationPrincipal UserDetails userDetails) {
-        AppUser appUser = userRepository.findByUsername(userDetails.getUsername());
+    public List<BandEvent> getAllEvents(@AuthenticationPrincipal String username) {
+        AppUser appUser = userRepository.findByUsername(username);
         return bandEventService.getAllEventsForCurrentUser(appUser);
     }
 
@@ -35,8 +33,8 @@ public class BandEventController {
     }
 
     @PostMapping("/event")
-    public BandEvent createEvent(@RequestBody @Valid BandEvent bandEvent, @AuthenticationPrincipal UserDetails userDetails) {
-        AppUser appUser = userRepository.findByUsername(userDetails.getUsername());
+    public BandEvent createEvent(@RequestBody @Valid BandEvent bandEvent, @AuthenticationPrincipal String username) {
+        AppUser appUser = userRepository.findByUsername(username);
         bandEvent.setAppUser(appUser);
         return bandEventService.saveEvent(bandEvent);
     }
