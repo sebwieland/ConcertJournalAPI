@@ -24,15 +24,13 @@ public class BandEvent {
     private String place;
     @NotNull(message = "Date is required.")
     private LocalDate date;
-    private String comment;
+    private String comment = "";
     @Min(value = 0, message = "Rating must be at least 0")
     @Max(value = 5, message = "Rating must be at most 5")
     @NotNull(message = "Rating is required.")
     private Integer rating;
-    @NotNull
     @CreationTimestamp
     private Instant creationDate;
-    @NotNull
     @UpdateTimestamp
     private Instant modificationDate;
 
