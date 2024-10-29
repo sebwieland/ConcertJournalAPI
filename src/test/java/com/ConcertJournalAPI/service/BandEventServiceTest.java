@@ -3,11 +3,15 @@ package com.ConcertJournalAPI.service;
 import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.BandEventRepository;
+import com.ConcertJournalAPI.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@EnableAutoConfiguration
 class BandEventServiceTest {
 
     @Mock
@@ -23,6 +29,11 @@ class BandEventServiceTest {
 
     @InjectMocks
     private BandEventService bandEventService;
+
+    @Mock
+    private UserRepository userRepository;
+
+    private AppUser appUser;
 
     public BandEvent getSampleBandEvent() {
         BandEvent sampleEvent = new BandEvent();
@@ -32,11 +43,23 @@ class BandEventServiceTest {
         return sampleEvent;
     }
 
+    public AppUser getSampleAppUser() {
+        AppUser sampleUser = new AppUser();
+        sampleUser.setUsername("testUser");
+        return sampleUser;
+    }
+
+    void setup() {
+        appUser = getSampleAppUser();
+        when(userRepository.findByUsername("testUser")).thenReturn(appUser);
+    }
+
+
     @Test
+    @WithMockUser(username = "testUser")
     void testGetAllEvents() {
-        // Given: a mock repository with some sample BandEvents
         List<BandEvent> sampleEvents = Arrays.asList(getSampleBandEvent(), getSampleBandEvent());
-        when(bandEventRepository.findAll()).thenReturn(sampleEvents);
+        when(bandEventRepository.findAllByAppUser(appUser)).thenReturn(sampleEvents);
 
         // When: calling the service method
         List<BandEvent> result = bandEventService.getAllEvents();
@@ -46,25 +69,13 @@ class BandEventServiceTest {
         assertEquals(sampleEvents, result);
     }
 
-    @Test
-    void testGetAllEventsForCurrentUser() {
-        // Arrange
-        AppUser user = new AppUser();
-        List<BandEvent> expectedEvents = List.of(new BandEvent(), new BandEvent());
-        when(bandEventRepository.findAllByAppUser(user)).thenReturn(expectedEvents);
-
-        // Act
-        List<BandEvent> actualEvents = bandEventService.getAllEventsForCurrentUser(user);
-
-        // Assert
-        assertEquals(expectedEvents, actualEvents);
-    }
 
     @Test
-    void testGetEventById() {
+    @WithMockUser(username = "testUser")
+    void testGetEvent() {
         //Given: a mock repository with one sample BandEvent
         BandEvent sampleEvent = getSampleBandEvent();
-        when(bandEventRepository.findById(sampleEvent.getId())).thenReturn(java.util.Optional.of(sampleEvent));
+        when(bandEventRepository.findByIdAndAppUser(sampleEvent.getId(), appUser)).thenReturn(java.util.Optional.of(sampleEvent));
 
         // When: calling the service method
         BandEvent result = bandEventService.getEventById(sampleEvent.getId());
@@ -75,6 +86,7 @@ class BandEventServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testUser")
     void testSaveEvent() {
         // Given: a mock repository with one sample BandEvent
         BandEvent sampleEvent = getSampleBandEvent();
@@ -89,7 +101,8 @@ class BandEventServiceTest {
     }
 
     @Test
-    void testDeleteEventById() {
+    @WithMockUser(username = "testUser")
+    void testDeleteEvent() {
         // Given: a mock repository with one sample BandEvent
         BandEvent sampleEvent = getSampleBandEvent();
 
@@ -97,7 +110,7 @@ class BandEventServiceTest {
         bandEventService.deleteEventById(sampleEvent.getId());
 
         // Then: verify the result
-        verify(bandEventRepository, times(1)).deleteById(sampleEvent.getId());
+        verify(bandEventRepository, times(1)).deleteByIdAndAppUser(sampleEvent.getId(), appUser);
     }
 
 

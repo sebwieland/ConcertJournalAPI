@@ -1,17 +1,16 @@
 package com.ConcertJournalAPI.controller;
 
-import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.UserRepository;
 import com.ConcertJournalAPI.service.BandEventService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//@CrossOrigin(origins = "http://localhost:3000")
 @Validated
 @RestController
 public class BandEventController {
@@ -22,9 +21,8 @@ public class BandEventController {
     private UserRepository userRepository;
 
     @GetMapping("/allEvents")
-    public List<BandEvent> getAllEvents(@AuthenticationPrincipal String username) {
-        AppUser appUser = userRepository.findByUsername(username);
-        return bandEventService.getAllEventsForCurrentUser(appUser);
+    public List<BandEvent> getAllEvents() {
+        return bandEventService.getAllEvents();
     }
 
     @GetMapping("/event/{id}")
@@ -33,13 +31,11 @@ public class BandEventController {
     }
 
     @PostMapping("/event")
-    public BandEvent createEvent(@RequestBody @Valid BandEvent bandEvent, @AuthenticationPrincipal String username) {
-        AppUser appUser = userRepository.findByUsername(username);
-        bandEvent.setAppUser(appUser);
+    public BandEvent createEvent(@RequestBody @Valid BandEvent bandEvent) {
         return bandEventService.saveEvent(bandEvent);
     }
 
-    @DeleteMapping("event/{id}")
+    @DeleteMapping("/event/{id}")
     public void deleteEvent(@PathVariable Long id) {
         bandEventService.deleteEventById(id);
     }
