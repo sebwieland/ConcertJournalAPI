@@ -69,7 +69,6 @@ class BandEventServiceTest {
         assertEquals(sampleEvents, result);
     }
 
-
     @Test
     @WithMockUser(username = "testUser")
     void testGetEvent() {
@@ -113,5 +112,24 @@ class BandEventServiceTest {
         verify(bandEventRepository, times(1)).deleteByIdAndAppUser(sampleEvent.getId(), appUser);
     }
 
+    @Test
+    void testGetAllEventsInvalidAuthentification() {
+        assertThrows(RuntimeException.class, () -> bandEventService.getAllEvents());
+    }
+
+    @Test
+    void testGetEventInvalidAuthentification() {
+        assertThrows(RuntimeException.class, () -> bandEventService.getEventById(1L));
+    }
+
+    @Test
+    void testSaveEventInvalidAuthentification() {
+        assertThrows(RuntimeException.class, () -> bandEventService.saveEvent(getSampleBandEvent()));
+    }
+
+    @Test
+    void testDeleteEventInvalidAuthentification() {
+        assertThrows(RuntimeException.class, () -> bandEventService.deleteEventById(1L));
+    }
 
 }
