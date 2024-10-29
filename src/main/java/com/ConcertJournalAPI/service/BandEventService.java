@@ -20,27 +20,44 @@ public class BandEventService {
     private UserRepository userRepository;
 
     public List<BandEvent> getAllEvents() {
-        return bandEventRepository.findAll();
-    }
-
-    public List<BandEvent> getAllEventsForCurrentUser(AppUser user) {
-        return bandEventRepository.findAllByAppUser(user);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new RuntimeException("User is not authenticated");
+        }
+        String username = authentication.getName();
+        AppUser appUser = userRepository.findByUsername(username);
+        return bandEventRepository.findAllByAppUser(appUser);
     }
 
     public BandEvent getEventById(Long id) {
-        return bandEventRepository.findById(id).orElse(null);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new RuntimeException("User is not authenticated");
+        }
+        String username = authentication.getName();
+        AppUser appUser = userRepository.findByUsername(username);
+        return bandEventRepository.findByIdAndAppUser(id,appUser).orElse(null);
+    }
+
+    public void deleteEventById(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new RuntimeException("User is not authenticated");
+        }
+        String username = authentication.getName();
+        AppUser appUser = userRepository.findByUsername(username);
+        bandEventRepository.deleteByIdAndAppUser(id, appUser);
     }
 
     public BandEvent saveEvent(BandEvent bandEvent) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new RuntimeException("User is not authenticated");
+        }
         String username = authentication.getName();
         AppUser appUser = userRepository.findByUsername(username);
         bandEvent.setAppUser(appUser);
         return bandEventRepository.save(bandEvent);
-    }
-
-    public void deleteEventById(Long id) {
-        bandEventRepository.deleteById(id);
     }
 
 }
