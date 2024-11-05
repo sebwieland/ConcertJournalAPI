@@ -132,4 +132,45 @@ class BandEventServiceTest {
         assertThrows(RuntimeException.class, () -> bandEventService.deleteEventById(1L));
     }
 
+    @Test
+    @WithMockUser(username = "testUser")
+    void testUpdateEvent() {
+        // Given: a mock repository with one sample BandEvent
+        setup();
+        BandEvent sampleEvent = getSampleBandEvent();
+        BandEvent updatedEvent = getSampleBandEvent();
+        updatedEvent.setBandName("Updated Band");
+        when(bandEventRepository.findByIdAndAppUser(sampleEvent.getId(), appUser)).thenReturn(java.util.Optional.of(sampleEvent));
+        when(bandEventRepository.save(any(BandEvent.class))).thenReturn(sampleEvent);
+
+        // When: calling the service method
+        BandEvent result = bandEventService.updateEvent(sampleEvent.getId(), updatedEvent);
+
+        // Then: verify the result
+        assertNotNull(result);
+        assertEquals(sampleEvent.getId(), result.getId());
+        assertEquals(updatedEvent.getBandName(), result.getBandName());
+    }
+
+    @Test
+    @WithMockUser(username = "testUser")
+    void testUpdateEventNotFound() {
+        // Given: a mock repository with no BandEvent
+        setup();
+        BandEvent updatedEvent = getSampleBandEvent();
+        when(bandEventRepository.findByIdAndAppUser(updatedEvent.getId(), appUser)).thenReturn(java.util.Optional.empty());
+
+        // When: calling the service method
+        assertThrows(RuntimeException.class, () -> bandEventService.updateEvent(updatedEvent.getId(), updatedEvent));
+    }
+
+    @Test
+    void testUpdateEventInvalidAuthentification() {
+        // Given: no authentication
+        BandEvent updatedEvent = getSampleBandEvent();
+
+        // When: calling the service method
+        assertThrows(RuntimeException.class, () -> bandEventService.updateEvent(updatedEvent.getId(), updatedEvent));
+    }
+
 }

@@ -39,4 +39,9 @@ public class BandEventController {
     public void deleteEvent(@PathVariable Long id) {
         bandEventService.deleteEventById(id);
     }
+
+    @PutMapping("/event/{id}")
+    public BandEvent updateEvent(@PathVariable Long id, @RequestBody @Valid BandEvent bandEvent) {
+        return bandEventService.updateEvent(id, bandEvent);
+    }
 }

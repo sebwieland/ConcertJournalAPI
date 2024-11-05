@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,6 +40,21 @@ public class BandEventService {
         return bandEventRepository.findByIdAndAppUser(id,appUser).orElse(null);
     }
 
+    @Transactional
+    public BandEvent updateEvent(Long id, BandEvent updatedBandEvent) {
+        BandEvent existingBandEvent = getEventById(id);
+        if (existingBandEvent == null) {
+            throw new RuntimeException("Event not found");
+        }
+        existingBandEvent.setBandName(updatedBandEvent.getBandName());
+        existingBandEvent.setDate(updatedBandEvent.getDate());
+        existingBandEvent.setPlace(updatedBandEvent.getPlace());
+        existingBandEvent.setRating(updatedBandEvent.getRating());
+        existingBandEvent.setComment(updatedBandEvent.getComment());
+        return bandEventRepository.save(existingBandEvent);
+    }
+
+    @Transactional
     public void deleteEventById(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
@@ -49,6 +65,7 @@ public class BandEventService {
         bandEventRepository.deleteByIdAndAppUser(id, appUser);
     }
 
+    @Transactional
     public BandEvent saveEvent(BandEvent bandEvent) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
