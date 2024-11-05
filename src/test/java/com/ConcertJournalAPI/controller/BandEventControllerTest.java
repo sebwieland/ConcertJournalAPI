@@ -88,4 +88,14 @@ class BandEventControllerTest {
 
         verify(bandEventService).deleteEventById(1L);
     }
+
+    @Test
+    void testUpdateEvent() {
+        when(bandEventService.updateEvent(1L, bandEvent1)).thenReturn(bandEvent1);
+
+        BandEvent response = bandEventController.updateEvent(1L, bandEvent1);
+
+        assertEquals(bandEvent1, response);
+        verify(bandEventService).updateEvent(1L, bandEvent1);
+    }
 }
