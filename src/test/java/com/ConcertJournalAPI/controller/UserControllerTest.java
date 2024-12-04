@@ -36,7 +36,7 @@ public class UserControllerTest {
         when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPassword");
 
         // Act
-        String result = userController.registerUser(user);
+        String result = userController.registerUser(user).getBody();
 
         // Assert
         assertEquals("User registered successfully", result);
@@ -55,10 +55,10 @@ public class UserControllerTest {
         when(appUserRepository.findByEmail(user.getEmail())).thenReturn(existingUser);
 
         // Act
-        String result = userController.registerUser(user);
+        String result = userController.registerUser(user).getBody();
 
         // Assert
-        assertEquals("Username already exists", result);
+        assertEquals("User already exists", result);
         verify(appUserRepository, never()).save(any(AppUser.class));
     }
 

@@ -26,7 +26,6 @@ public class CustomUserDetailsServiceTest {
     @Test
     public void testLoadUserByUsernameSuccess() {
         // Arrange
-        String username = "testUser";
         String email = "test@example.com";
         AppUser appUser = new AppUser();
         appUser.setEmail(email);
@@ -38,7 +37,7 @@ public class CustomUserDetailsServiceTest {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
         // Assert
-        assertEquals(username, userDetails.getUsername());
+        assertEquals(email, userDetails.getUsername());
         assertEquals(appUser.getPassword(), userDetails.getPassword());
     }
 
