@@ -3,7 +3,7 @@ package com.ConcertJournalAPI.service;
 import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.BandEventRepository;
-import com.ConcertJournalAPI.repository.UserRepository;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +18,7 @@ public class BandEventService {
     private BandEventRepository bandEventRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
     public List<BandEvent> getAllEvents() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -26,7 +26,7 @@ public class BandEventService {
             throw new RuntimeException("User is not authenticated");
         }
         String username = authentication.getName();
-        AppUser appUser = userRepository.findByUsername(username);
+        AppUser appUser = appUserRepository.findByEmail(username);
         return bandEventRepository.findAllByAppUser(appUser);
     }
 
@@ -36,7 +36,7 @@ public class BandEventService {
             throw new RuntimeException("User is not authenticated");
         }
         String username = authentication.getName();
-        AppUser appUser = userRepository.findByUsername(username);
+        AppUser appUser = appUserRepository.findByEmail(username);
         return bandEventRepository.findByIdAndAppUser(id,appUser).orElse(null);
     }
 
@@ -61,7 +61,7 @@ public class BandEventService {
             throw new RuntimeException("User is not authenticated");
         }
         String username = authentication.getName();
-        AppUser appUser = userRepository.findByUsername(username);
+        AppUser appUser = appUserRepository.findByEmail(username);
         bandEventRepository.deleteByIdAndAppUser(id, appUser);
     }
 
@@ -72,7 +72,7 @@ public class BandEventService {
             throw new RuntimeException("User is not authenticated");
         }
         String username = authentication.getName();
-        AppUser appUser = userRepository.findByUsername(username);
+        AppUser appUser = appUserRepository.findByEmail(username);
         bandEvent.setAppUser(appUser);
         return bandEventRepository.save(bandEvent);
     }

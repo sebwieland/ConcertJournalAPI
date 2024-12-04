@@ -3,7 +3,7 @@ package com.ConcertJournalAPI;
 import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.BandEventRepository;
-import com.ConcertJournalAPI.repository.UserRepository;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,20 +13,19 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.stream.IntStream;
 
 @Component
 public class DataLoader implements CommandLineRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DataLoader(UserRepository userRepository,
+    public DataLoader(AppUserRepository appUserRepository,
                       PasswordEncoder passwordEncoder,
                       BandEventRepository bandEventRepository) {
-        this.userRepository = userRepository;
+        this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -34,14 +33,13 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) {
 //         userRepository.delete(userRepository.findByEmail("admin@example.com"));
         // Check if users already exist
-        if (!userRepository.existsAppUserByEmail("admin@example.com")) {
+        if (!appUserRepository.existsAppUserByEmail("admin@example.com")) {
             // Create default user
             AppUser user = new AppUser();
-            user.setUsername("admin");
             user.setPassword(passwordEncoder.encode("password"));
             user.setRole("ADMIN");
             user.setEmail("admin@example.com");
-            userRepository.save(user);
+            appUserRepository.save(user);
 
             LOGGER.info("Default admin user created with username 'admin@example.com' and password 'password'");
         } else {

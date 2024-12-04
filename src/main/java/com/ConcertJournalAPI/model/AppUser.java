@@ -2,8 +2,8 @@ package com.ConcertJournalAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,14 +18,14 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Username is required.")
-    private String username;
-    private String password;
-    //@NotBlank(message = "Email is required.")
+    @Column(unique=true)
+    @NotBlank(message = "Email is required.")
+    @Email(message = "Invalid email.")
     private String email;
+    @NotBlank(message = "Password is required.")
+    private String password;
     private String firstName;
     private String lastName;
-    @NotNull(message = "Role is required.")
     private String role;
 
     @JsonIgnore

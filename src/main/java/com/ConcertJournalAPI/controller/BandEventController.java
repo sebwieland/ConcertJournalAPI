@@ -1,7 +1,7 @@
 package com.ConcertJournalAPI.controller;
 
 import com.ConcertJournalAPI.model.BandEvent;
-import com.ConcertJournalAPI.repository.UserRepository;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import com.ConcertJournalAPI.service.BandEventService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class BandEventController {
     private BandEventService bandEventService;
 
     @Autowired
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
     @GetMapping("/allEvents")
     public List<BandEvent> getAllEvents() {

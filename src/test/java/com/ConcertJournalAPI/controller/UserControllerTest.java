@@ -1,7 +1,7 @@
 package com.ConcertJournalAPI.controller;
 
 import com.ConcertJournalAPI.model.AppUser;
-import com.ConcertJournalAPI.repository.UserRepository;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ public class UserControllerTest {
     private UserController userController;
 
     @Mock
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -30,9 +30,9 @@ public class UserControllerTest {
     public void testRegisterUserSuccess() {
         // Arrange
         AppUser user = new AppUser();
-        user.setUsername("testUser");
+        user.setEmail("testUser");
         user.setPassword("password");
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(null);
+        when(appUserRepository.findByEmail(user.getEmail())).thenReturn(null);
         when(passwordEncoder.encode(user.getPassword())).thenReturn("encodedPassword");
 
         // Act
@@ -40,26 +40,26 @@ public class UserControllerTest {
 
         // Assert
         assertEquals("User registered successfully", result);
-        verify(userRepository, times(1)).save(any(AppUser.class));
+        verify(appUserRepository, times(1)).save(any(AppUser.class));
     }
 
     @Test
     public void testRegisterUserUsernameAlreadyExists() {
         // Arrange
         AppUser user = new AppUser();
-        user.setUsername("testUser");
+        user.setEmail("testUser");
         user.setPassword("password");
         AppUser existingUser = new AppUser();
-        existingUser.setUsername("testUser");
+        existingUser.setEmail("testUser");
         existingUser.setPassword("existingPassword");
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(existingUser);
+        when(appUserRepository.findByEmail(user.getEmail())).thenReturn(existingUser);
 
         // Act
         String result = userController.registerUser(user);
 
         // Assert
         assertEquals("Username already exists", result);
-        verify(userRepository, never()).save(any(AppUser.class));
+        verify(appUserRepository, never()).save(any(AppUser.class));
     }
 
     @Test

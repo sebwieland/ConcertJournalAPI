@@ -3,7 +3,7 @@ package com.ConcertJournalAPI.service;
 import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.model.BandEvent;
 import com.ConcertJournalAPI.repository.BandEventRepository;
-import com.ConcertJournalAPI.repository.UserRepository;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,7 +31,7 @@ class BandEventServiceTest {
     private BandEventService bandEventService;
 
     @Mock
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
     private AppUser appUser;
 
@@ -45,13 +45,13 @@ class BandEventServiceTest {
 
     public AppUser getSampleAppUser() {
         AppUser sampleUser = new AppUser();
-        sampleUser.setUsername("testUser");
+        sampleUser.setEmail("testUser");
         return sampleUser;
     }
 
     void setup() {
         appUser = getSampleAppUser();
-        when(userRepository.findByUsername("testUser")).thenReturn(appUser);
+        when(appUserRepository.findByEmail("testUser")).thenReturn(appUser);
     }
 
 

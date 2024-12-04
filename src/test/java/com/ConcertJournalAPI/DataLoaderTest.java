@@ -2,7 +2,7 @@ package com.ConcertJournalAPI;
 
 import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.repository.BandEventRepository;
-import com.ConcertJournalAPI.repository.UserRepository;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ public class DataLoaderTest {
     private DataLoader dataLoader;
 
     @Mock
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -30,25 +30,25 @@ public class DataLoaderTest {
     @Test
     public void testCreateDefaultUser() {
         // Arrange
-        when(userRepository.existsAppUserByEmail("admin@example.com")).thenReturn(false);
+        when(appUserRepository.existsAppUserByEmail("admin@example.com")).thenReturn(false);
 
         // Act
         dataLoader.run();
 
         // Assert
-        verify(userRepository, times(1)).save(any(AppUser.class));
+        verify(appUserRepository, times(1)).save(any(AppUser.class));
     }
 
     @Test
     public void testDefaultUserAlreadyExists() {
         // Arrange
-        when(userRepository.existsAppUserByEmail("admin@example.com")).thenReturn(true);
+        when(appUserRepository.existsAppUserByEmail("admin@example.com")).thenReturn(true);
 
         // Act
         dataLoader.run();
 
         // Assert
-        verify(userRepository, never()).save(any(AppUser.class));
+        verify(appUserRepository, never()).save(any(AppUser.class));
     }
 
     // Add more tests as needed

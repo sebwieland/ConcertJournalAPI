@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.AuthenticationException;
+import com.ConcertJournalAPI.security.AuthFailureHandler;
 
 import java.io.IOException;
 import java.io.PrintWriter;

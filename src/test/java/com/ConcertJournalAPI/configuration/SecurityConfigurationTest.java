@@ -2,7 +2,7 @@ package com.ConcertJournalAPI.configuration;
 
 import com.ConcertJournalAPI.controller.BandEventController;
 import com.ConcertJournalAPI.model.AppUser;
-import com.ConcertJournalAPI.repository.UserRepository;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import com.ConcertJournalAPI.service.BandEventService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -43,7 +43,7 @@ public class SecurityConfigurationTest {
     private BandEventService bandEventService;
 
     @MockBean
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
     @Test
     @WithMockUser(username = TEST_USERNAME, roles = TEST_ROLE)
