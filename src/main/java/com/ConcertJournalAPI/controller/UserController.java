@@ -1,7 +1,7 @@
 package com.ConcertJournalAPI.controller;
 
 import com.ConcertJournalAPI.model.AppUser;
-import com.ConcertJournalAPI.repository.UserRepository;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public UserController(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+        this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
     public String registerUser(@RequestBody AppUser user) {
         // Check if username already exists
-        if (userRepository.findByUsername(user.getUsername()) != null) {
-            return "Username already exists";
+        if (appUserRepository.findByEmail(user.getEmail()) != null) {
+            return "User already exists";
         }
         // Encode the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        appUserRepository.save(user);
         //set role to user by default
         user.setRole("USER");
         return "User registered successfully";

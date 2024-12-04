@@ -1,7 +1,7 @@
 package com.ConcertJournalAPI.service;
 
 import com.ConcertJournalAPI.model.AppUser;
-import com.ConcertJournalAPI.repository.UserRepository;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private AppUserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // Convert User to UserDetails
         return org.springframework.security.core.userdetails.User
-                .withUsername(appUser.getUsername())
+                .withUsername(appUser.getEmail())
                 .password(appUser.getPassword())
                 .roles(appUser.getRole()) // Set roles as needed
                 .build();

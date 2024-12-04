@@ -1,8 +1,7 @@
 package com.ConcertJournalAPI.service;
 
 import com.ConcertJournalAPI.model.AppUser;
-import com.ConcertJournalAPI.repository.UserRepository;
-import org.junit.jupiter.api.Disabled;
+import com.ConcertJournalAPI.repository.AppUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +21,7 @@ public class CustomUserDetailsServiceTest {
     private CustomUserDetailsService customUserDetailsService;
 
     @Mock
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
     @Test
     public void testLoadUserByUsernameSuccess() {
@@ -30,11 +29,10 @@ public class CustomUserDetailsServiceTest {
         String username = "testUser";
         String email = "test@example.com";
         AppUser appUser = new AppUser();
-        appUser.setUsername(username);
         appUser.setEmail(email);
         appUser.setPassword("password");
         appUser.setRole("USER");
-        when(userRepository.findByEmail(email)).thenReturn(appUser);
+        when(appUserRepository.findByEmail(email)).thenReturn(appUser);
 
         // Act
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
@@ -48,7 +46,7 @@ public class CustomUserDetailsServiceTest {
     public void testLoadUserByUsernameUserNotFound() {
         // Arrange
         String email = "testEmail@example.com";
-        when(userRepository.findByEmail(email)).thenReturn(null);
+        when(appUserRepository.findByEmail(email)).thenReturn(null);
 
         // Act and Assert
         assertThrows(UsernameNotFoundException.class, () -> customUserDetailsService.loadUserByUsername(email));
