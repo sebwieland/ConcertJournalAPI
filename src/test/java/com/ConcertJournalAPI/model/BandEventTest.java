@@ -199,14 +199,11 @@ class BandEventTest {
     @Test
     public void testModificationDate() {
         BandEvent event = new BandEvent();
-        Instant before = Instant.now();
-        // Simulate updating the event
-        event.setModificationDate(Instant.now());
-        Instant after = before.plusSeconds(2);
+        Instant fixedDate = Instant.parse("2022-01-01T12:00:00.00Z");
+        event.setModificationDate(fixedDate);
 
         assertNotNull(event.getModificationDate());
-        Assertions.assertTrue(event.getModificationDate().isAfter(before));
-        Assertions.assertTrue(event.getModificationDate().isBefore(after));
+        assertEquals(fixedDate, event.getModificationDate());
     }
 
 }
