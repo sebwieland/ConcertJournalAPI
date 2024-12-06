@@ -124,6 +124,7 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-g</arg>
+                        <arg>-parameters</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
