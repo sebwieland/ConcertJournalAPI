@@ -103,4 +103,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/bandjournal:api-${{ env.new_version }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/concertjournal:api-${{ env.new_version }}
