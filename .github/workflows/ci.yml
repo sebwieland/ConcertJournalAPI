@@ -104,3 +104,4 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/concertjournal:api-${{ env.new_version }}
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
