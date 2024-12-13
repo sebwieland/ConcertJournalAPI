@@ -52,7 +52,7 @@ public class SecurityConfiguration {
 
                 // Authorize requests
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/error", "/auth/**", "/register", "/login").permitAll()
+                        .requestMatchers("/error", "/auth/**", "/register", "/login", "/actuator/prometheus").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated()
                 )
