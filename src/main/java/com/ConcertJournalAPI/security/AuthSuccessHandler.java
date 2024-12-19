@@ -1,6 +1,7 @@
 package com.ConcertJournalAPI.security;
 
 import com.ConcertJournalAPI.DataLoader;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 
 import java.io.IOException;
 
+import static com.ConcertJournalAPI.security.JwtUtils.generateRefreshToken;
 import static com.ConcertJournalAPI.security.JwtUtils.generateToken;
 
 public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -20,11 +22,21 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        String token = generateToken(authentication);
+        String accessToken = generateToken(authentication);
+        String refreshToken = generateRefreshToken(authentication);
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json");
-        response.getWriter().write("{\"token\":\"" + token + "\"}");
+        response.getWriter().write("{\"accessToken\":\"" + accessToken + "\", \"refreshToken\":\"" + refreshToken + "\"}");
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         LOGGER.info("UserDetails: {}", userDetails);
+
+        // Store refresh token in cookie
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(86400 * 30); // 30 days
+        response.addCookie(cookie);
     }
+
 }

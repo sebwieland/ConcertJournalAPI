@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
@@ -16,21 +17,28 @@ import java.io.IOException;
 import java.util.Collections;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final AuthSuccessHandler authSuccessHandler;
 
     public JwtAuthenticationFilter(AuthSuccessHandler authSuccessHandler) {
-        this.authSuccessHandler = authSuccessHandler;
     }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String token = JwtUtils.extractTokenFromRequest(request);
-        if (token != null) {
+        Cookie[] cookies = request.getCookies();
+        String accessToken = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("accessToken")) {
+                    accessToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        if (accessToken != null) {
             try {
-                Claims claims = JwtUtils.parseToken(token);
+                Claims claims = JwtUtils.parseToken(accessToken);
                 authenticateUser(claims);
             } catch (JwtException e) {
-                // Ignore invalid token and let Spring Security handle it
+                // Handle invalid token
             }
         }
         filterChain.doFilter(request, response);
