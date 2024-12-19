@@ -13,7 +13,7 @@ import java.util.Date;
 
 import static com.ConcertJournalAPI.configuration.SecurityConstants.*;
 
-class JwtUtils {
+public class JwtUtils {
     private static final String jwtSecret = System.getenv("JWT_SECRET");
 
 
@@ -21,7 +21,16 @@ class JwtUtils {
         return Jwts.builder()
                 .subject(authentication.getName())
                 .issuedAt(new Date())
-                .expiration(new Date((new Date()).getTime() + 86400000)) // 1 day
+                .expiration(new Date((new Date()).getTime() + 180000)) // 3 Minutes
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    public static String generateRefreshToken(Authentication authentication) {
+        return Jwts.builder()
+                .subject(authentication.getName())
+                .issuedAt(new Date())
+                .expiration(new Date((new Date()).getTime() + 2592000000L)) // 30 days
                 .signWith(getSigningKey())
                 .compact();
     }
