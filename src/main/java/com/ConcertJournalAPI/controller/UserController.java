@@ -30,9 +30,9 @@ public class UserController {
         }
         // Encode the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        appUserRepository.save(user);
         //set role to user by default
         user.setRole("USER");
+        appUserRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 }
