@@ -17,10 +17,6 @@ import java.util.Collections;
 @RestController
 public class SecurityController {
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshAccessToken(HttpServletRequest request) {
