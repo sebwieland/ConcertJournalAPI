@@ -3,6 +3,7 @@ package com.ConcertJournalAPI.configuration;
 import com.ConcertJournalAPI.security.AuthFailureHandler;
 import com.ConcertJournalAPI.security.AuthSuccessHandler;
 import com.ConcertJournalAPI.security.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,9 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    @Autowired
+    private CorsConfig corsConfig;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
@@ -31,7 +35,7 @@ public class SecurityConfiguration {
         AuthSuccessHandler authSuccessHandler = new AuthSuccessHandler();
         http
                 // Enable CORS
-                .cors(cors -> CorsConfig.corsConfigurationSource())
+                .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
 
                 // Disable CSRF for simplicity (enable it in production)
                 .csrf(AbstractHttpConfigurer::disable)

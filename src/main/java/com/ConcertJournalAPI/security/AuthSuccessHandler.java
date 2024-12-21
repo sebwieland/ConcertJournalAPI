@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,9 @@ import static com.ConcertJournalAPI.security.JwtUtils.generateToken;
 public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
+
+    @Value("${auth.cookie.httpOnly}")
+    private Boolean setHttpOnly;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -34,7 +38,7 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
         // Store refresh token in cookie
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setSecure(true);
-        cookie.setHttpOnly(false);
+        cookie.setHttpOnly(setHttpOnly);
         cookie.setMaxAge(86400 * 30); // 30 days
         response.addCookie(cookie);
     }
