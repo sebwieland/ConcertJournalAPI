@@ -16,12 +16,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final AuthSuccessHandler authSuccessHandler;
-
-    public JwtAuthenticationFilter(AuthSuccessHandler authSuccessHandler) {
-        this.authSuccessHandler = authSuccessHandler;
-    }
-
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = JwtUtils.extractTokenFromRequest(request);
