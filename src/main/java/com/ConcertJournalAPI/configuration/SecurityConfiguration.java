@@ -44,10 +44,13 @@ public class SecurityConfiguration {
                 request.getMethod().equals(HttpMethod.TRACE.name()));
     }
 
+    @Bean
+    public AuthSuccessHandler authSuccessHandler() {
+        return new AuthSuccessHandler();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        AuthSuccessHandler authSuccessHandler = new AuthSuccessHandler();
         http
                 // Enable CORS
                 .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
@@ -67,7 +70,7 @@ public class SecurityConfiguration {
 
                 .formLogin(form -> form
                         .usernameParameter("email")
-                        .successHandler(new AuthSuccessHandler())
+                        .successHandler(authSuccessHandler())
                         .failureHandler(new AuthFailureHandler())
                         .loginPage("/login")
                 )
@@ -85,7 +88,7 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 )
 
-                .addFilterBefore(new JwtAuthenticationFilter(authSuccessHandler), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
