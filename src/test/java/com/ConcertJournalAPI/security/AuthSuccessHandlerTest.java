@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,6 +40,7 @@ public class AuthSuccessHandlerTest {
     @BeforeEach
     public void setup() {
         authSuccessHandler = new AuthSuccessHandler();
+        ReflectionTestUtils.setField(authSuccessHandler, "httpOnly", false);
     }
 
     @Test
@@ -51,7 +53,9 @@ public class AuthSuccessHandlerTest {
 
         // Assert
         String token = JwtUtils.generateToken(authentication);
-        verify(writer).write("{\"token\":\"" + token + "\"}");
+        String refreshToken = JwtUtils.generateRefreshToken(authentication);
+        verify(writer).write("{\"accessToken\":\"" + token + "\", " +
+                "\"refreshToken\":\"" + refreshToken + "\"}");
     }
 
     @Test
