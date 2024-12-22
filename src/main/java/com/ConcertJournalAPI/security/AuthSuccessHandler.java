@@ -11,12 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 import static com.ConcertJournalAPI.security.JwtUtils.generateRefreshToken;
 import static com.ConcertJournalAPI.security.JwtUtils.generateToken;
 
+@Component
 public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
@@ -38,7 +40,7 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
         // Store refresh token in cookie
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setSecure(true);
-        cookie.setHttpOnly(setHttpOnly);
+        cookie.setHttpOnly(false);
         cookie.setMaxAge(86400 * 30); // 30 days
         response.addCookie(cookie);
     }
