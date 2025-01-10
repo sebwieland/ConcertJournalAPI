@@ -4,6 +4,7 @@ import com.ConcertJournalAPI.controller.BandEventController;
 import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.repository.AppUserRepository;
 import com.ConcertJournalAPI.service.BandEventService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +12,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.logout;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -88,5 +93,33 @@ public class SecurityConfigurationTest {
     public void testLogoutWorks() throws Exception {
         mockMvc.perform(logout())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testCsrfRequestMatcher() {
+        // Arrange
+        SecurityConfiguration securityConfiguration = new SecurityConfiguration();
+        RequestMatcher csrfRequestMatcher = securityConfiguration.csrfRequestMatcher();
+
+        // Act and Assert
+        HttpServletRequest getRequest = mock(HttpServletRequest.class);
+        when(getRequest.getMethod()).thenReturn(HttpMethod.GET.name());
+        Assertions.assertFalse(csrfRequestMatcher.matches(getRequest));
+
+        HttpServletRequest postRequest = mock(HttpServletRequest.class);
+        when(postRequest.getMethod()).thenReturn(HttpMethod.POST.name());
+        Assertions.assertTrue(csrfRequestMatcher.matches(postRequest));
+
+        HttpServletRequest headRequest = mock(HttpServletRequest.class);
+        when(headRequest.getMethod()).thenReturn(HttpMethod.HEAD.name());
+        Assertions.assertFalse(csrfRequestMatcher.matches(headRequest));
+
+        HttpServletRequest optionsRequest = mock(HttpServletRequest.class);
+        when(optionsRequest.getMethod()).thenReturn(HttpMethod.OPTIONS.name());
+        Assertions.assertFalse(csrfRequestMatcher.matches(optionsRequest));
+
+        HttpServletRequest traceRequest = mock(HttpServletRequest.class);
+        when(traceRequest.getMethod()).thenReturn(HttpMethod.TRACE.name());
+        Assertions.assertFalse(csrfRequestMatcher.matches(traceRequest));
     }
 }
