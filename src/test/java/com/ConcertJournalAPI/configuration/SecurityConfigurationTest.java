@@ -5,7 +5,6 @@ import com.ConcertJournalAPI.model.AppUser;
 import com.ConcertJournalAPI.repository.AppUserRepository;
 import com.ConcertJournalAPI.service.BandEventService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = BandEventController.class)
 @AutoConfigureMockMvc
-@Import({PasswordConfig.class, SecurityConfiguration.class})
+@Import({PasswordConfig.class, SecurityConfiguration.class, CorsConfig.class})
 public class SecurityConfigurationTest {
 
     private static final String TEST_USERNAME = "admin@example.com";
@@ -62,7 +61,6 @@ public class SecurityConfigurationTest {
     }
 
     @Test
-    @Disabled
     public void testCsrfProtection() throws Exception {
         mockMvc.perform(post("/allEvents")
                         .with(csrf().useInvalidToken()))
