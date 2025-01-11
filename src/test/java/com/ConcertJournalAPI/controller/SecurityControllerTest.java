@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,9 @@ public class SecurityControllerTest {
     private HttpServletRequest request;
 
     @Mock
+    private HttpServletResponse response;
+
+    @Mock
     private JwtUtils jwtUtils;
 
     @InjectMocks
@@ -40,10 +44,10 @@ public class SecurityControllerTest {
         when(request.getCookies()).thenReturn(null);
 
         // Act
-        ResponseEntity<?> response = securityController.refreshAccessToken(request);
+        ResponseEntity<?> res = securityController.refreshAccessToken(request, response);
 
         // Assert
-        assertEquals(400, response.getStatusCodeValue());
+        assertEquals(400, res.getStatusCodeValue());
     }
 
     @Test
@@ -53,10 +57,10 @@ public class SecurityControllerTest {
         when(request.getCookies()).thenReturn(cookies);
 
         // Act
-        ResponseEntity<?> response = securityController.refreshAccessToken(request);
+        ResponseEntity<?> res = securityController.refreshAccessToken(request, response);
 
         // Assert
-        assertEquals(400, response.getStatusCodeValue());
+        assertEquals(400, res.getStatusCodeValue());
     }
 
     @Test
@@ -68,13 +72,13 @@ public class SecurityControllerTest {
         Claims claims = mock(Claims.class);
 
         // Act
-        ResponseEntity<?> response = securityController.refreshAccessToken(request);
+        ResponseEntity<?> res = securityController.refreshAccessToken(request, response);
 
         // Assert
-        assertEquals(200, response.getStatusCodeValue());
-        assertNotNull(response.getBody());
-        Assertions.assertTrue(response.getBody() instanceof String);
-        String responseBody = (String) response.getBody();
+        assertEquals(200, res.getStatusCodeValue());
+        assertNotNull(res.getBody());
+        Assertions.assertTrue(res.getBody() instanceof String);
+        String responseBody = (String) res.getBody();
         String accessToken = responseBody.substring(responseBody.indexOf(":") + 2, responseBody.length() - 2);
         try {
             JwtUtils.parseToken(accessToken);
