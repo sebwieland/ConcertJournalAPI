@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,7 @@ public class SecurityController {
 
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshAccessToken(HttpServletRequest request) {
+    public ResponseEntity<?> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
         String refreshToken = null;
         if (cookies != null) {
@@ -37,12 +38,19 @@ public class SecurityController {
             String subject = claims.getSubject();
             Authentication authentication = new UsernamePasswordAuthenticationToken(subject, null, Collections.emptyList());
             String newAccessToken = JwtUtils.generateToken(authentication);
+            String newRefreshToken = JwtUtils.generateRefreshToken(authentication);
+
+            // Set the new refresh token in a secure cookie
+            Cookie newRefreshTokenCookie = new Cookie("refreshToken", newRefreshToken);
+            newRefreshTokenCookie.setHttpOnly(true);
+            newRefreshTokenCookie.setSecure(true); // Set to true if using HTTPS
+            newRefreshTokenCookie.setPath("/");
+            response.addCookie(newRefreshTokenCookie);
+
             return ResponseEntity.ok().body("{\"accessToken\":\"" + newAccessToken + "\"}");
         } catch (JwtException e) {
             // Handle invalid refresh token
             return ResponseEntity.badRequest().build();
         }
     }
-
-
 }

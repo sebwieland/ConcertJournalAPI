@@ -58,7 +58,7 @@ public class SecurityConfiguration {
                 // Enable CSRF protection
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                        .csrfTokenRequestHandler(new CookieCsrfTokenRequestHandler())
                 )
 
                 .logout(logout -> logout
@@ -77,7 +77,7 @@ public class SecurityConfiguration {
 
                 // Authorize requests
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/error", "/auth/**", "/register", "/login", "/actuator/prometheus").permitAll()
+                        .requestMatchers("/error", "/auth/**", "/register", "/login", "/actuator/prometheus", "/get-xsrf-cookie").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated()
                 )
