@@ -50,14 +50,26 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    CookieCsrfTokenRepository csrfTokenRepository() {
+        CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
+        repository.setCookieCustomizer(cookieBuilder -> {
+            cookieBuilder.sameSite("Lax"); // or "Strict" or "None"
+            cookieBuilder.secure(true);
+        });
+        repository.setCookieHttpOnly(false);
+        return repository;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // Enable CORS
                 .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
 
                 // Enable CSRF protection
+
                 .csrf((csrf) -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(csrfTokenRepository())
                         .csrfTokenRequestHandler(new CookieCsrfTokenRequestHandler())
                 )
 

@@ -42,6 +42,7 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
         cookie.setSecure(true);
         cookie.setHttpOnly(httpOnly);
         cookie.setMaxAge(86400 * 30); // 30 days
+        cookie.setAttribute("SameSite", "Lax");
         response.addCookie(cookie);
     }
 
