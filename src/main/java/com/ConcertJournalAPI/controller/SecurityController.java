@@ -45,6 +45,7 @@ public class SecurityController {
             newRefreshTokenCookie.setHttpOnly(true);
             newRefreshTokenCookie.setSecure(true); // Set to true if using HTTPS
             newRefreshTokenCookie.setPath("/");
+//            newRefreshTokenCookie.setValue(newRefreshToken + "; SameSite=None");
             response.addCookie(newRefreshTokenCookie);
 
             return ResponseEntity.ok().body("{\"accessToken\":\"" + newAccessToken + "\"}");
