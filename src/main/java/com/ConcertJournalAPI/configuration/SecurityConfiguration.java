@@ -53,7 +53,7 @@ public class SecurityConfiguration {
     CookieCsrfTokenRepository csrfTokenRepository() {
         CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
         repository.setCookieCustomizer(cookieBuilder -> {
-            cookieBuilder.sameSite("Lax"); // or "Strict" or "None"
+            cookieBuilder.sameSite("None"); // or "Strict" or "None"
             cookieBuilder.secure(true);
         });
         repository.setCookieHttpOnly(false);
@@ -67,7 +67,6 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
 
                 // Enable CSRF protection
-
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(csrfTokenRepository())
                         .csrfTokenRequestHandler(new CookieCsrfTokenRequestHandler())
