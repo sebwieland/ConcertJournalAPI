@@ -11,7 +11,7 @@ public class CookieConfig {
     @Bean
     public CookieSerializer cookieSerializer() {
         DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-        serializer.setSameSite("Lax");
+        serializer.setSameSite("None");
         return serializer;
     }
 }
