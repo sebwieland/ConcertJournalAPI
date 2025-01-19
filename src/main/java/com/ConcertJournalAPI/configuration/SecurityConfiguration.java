@@ -67,7 +67,6 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
 
                 // Enable CSRF protection
-
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(csrfTokenRepository())
                         .csrfTokenRequestHandler(new CookieCsrfTokenRequestHandler())
