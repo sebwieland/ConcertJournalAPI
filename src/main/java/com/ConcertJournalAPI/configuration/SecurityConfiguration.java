@@ -6,6 +6,7 @@ import com.ConcertJournalAPI.security.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -31,6 +32,12 @@ public class SecurityConfiguration {
     @Autowired
     private CorsConfig corsConfig;
 
+    @Value("${auth.cookie.secure}")
+    private boolean secureCookie;
+
+    @Value("${auth.cookie.httpOnly}")
+    private boolean httpOnlyCookie;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
@@ -54,9 +61,9 @@ public class SecurityConfiguration {
         CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
         repository.setCookieCustomizer(cookieBuilder -> {
             cookieBuilder.sameSite("Lax"); // or "Strict" or "None"
-            cookieBuilder.secure(true);
+            cookieBuilder.secure(secureCookie);
         });
-        repository.setCookieHttpOnly(false);
+        repository.setCookieHttpOnly(httpOnlyCookie);
         return repository;
     }
 

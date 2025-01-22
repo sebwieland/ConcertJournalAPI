@@ -23,8 +23,11 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
 
+    @Value("${auth.cookie.secure}")
+    private boolean secureCookie;
+
     @Value("${auth.cookie.httpOnly}")
-    private Boolean httpOnly;
+    private boolean httpOnlyCookie;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -39,8 +42,8 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
 
         // Store refresh token in cookie
         Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(httpOnly);
+        cookie.setSecure(secureCookie);
+        cookie.setHttpOnly(httpOnlyCookie);
         cookie.setMaxAge(86400 * 30); // 30 days
         cookie.setAttribute("SameSite", "Lax");
         response.addCookie(cookie);

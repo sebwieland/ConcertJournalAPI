@@ -6,6 +6,7 @@ import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,11 @@ import java.util.Collections;
 @RestController
 public class SecurityController {
 
+    @Value("${auth.cookie.secure}")
+    private boolean secureCookie;
+
+    @Value("${auth.cookie.httpOnly}")
+    private boolean httpOnlyCookie;
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
@@ -42,8 +48,8 @@ public class SecurityController {
 
             // Set the new refresh token in a secure cookie
             Cookie newRefreshTokenCookie = new Cookie("refreshToken", newRefreshToken);
-            newRefreshTokenCookie.setHttpOnly(true);
-            newRefreshTokenCookie.setSecure(true); // Set to true if using HTTPS
+            newRefreshTokenCookie.setHttpOnly(httpOnlyCookie);
+            newRefreshTokenCookie.setSecure(secureCookie); // Set to true if using HTTPS
             newRefreshTokenCookie.setPath("/");
             newRefreshTokenCookie.setValue(newRefreshToken);
             newRefreshTokenCookie.setAttribute("SameSite", "Lax");

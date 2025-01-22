@@ -40,7 +40,8 @@ public class AuthSuccessHandlerTest {
     @BeforeEach
     public void setup() {
         authSuccessHandler = new AuthSuccessHandler();
-        ReflectionTestUtils.setField(authSuccessHandler, "httpOnly", false);
+        ReflectionTestUtils.setField(authSuccessHandler, "httpOnlyCookie", false);
+        ReflectionTestUtils.setField(authSuccessHandler, "secureCookie", false);
     }
 
     @Test
