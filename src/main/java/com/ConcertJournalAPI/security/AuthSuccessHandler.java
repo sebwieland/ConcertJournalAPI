@@ -43,7 +43,7 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
         // Store refresh token in cookie
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setSecure(secureCookie);
-        cookie.setHttpOnly(httpOnlyCookie);
+        cookie.setHttpOnly(false);
         cookie.setMaxAge(86400 * 30); // 30 days
         cookie.setAttribute("SameSite", "Lax");
         response.addCookie(cookie);
