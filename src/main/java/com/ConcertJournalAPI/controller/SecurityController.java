@@ -50,7 +50,7 @@ public class SecurityController {
 
             // Set the new refresh token in a secure cookie
             Cookie newRefreshTokenCookie = new Cookie("refreshToken", newRefreshToken);
-            newRefreshTokenCookie.setHttpOnly(httpOnlyCookie);
+            newRefreshTokenCookie.setHttpOnly(false);
             newRefreshTokenCookie.setSecure(secureCookie); // Set to true if using HTTPS
             newRefreshTokenCookie.setPath("/");
             newRefreshTokenCookie.setValue(newRefreshToken);
