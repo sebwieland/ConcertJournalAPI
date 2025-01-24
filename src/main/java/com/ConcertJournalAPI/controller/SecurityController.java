@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,5 +62,18 @@ public class SecurityController {
             // Handle invalid refresh token
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("/get-xsrf-cookie")
+    public ResponseEntity<Void> getCsrfToken(CsrfToken token, HttpServletResponse response) {
+        // Set the CSRF token as a cookie
+        Cookie csrfCookie = new Cookie("XSRF-TOKEN", token.getToken());
+        csrfCookie.setHttpOnly(false); // Required for JavaScript to access the cookie
+        csrfCookie.setSecure(secureCookie); // Set to true if using HTTPS
+        csrfCookie.setPath("/");
+        csrfCookie.setAttribute("SameSite", "Lax");
+        csrfCookie.setMaxAge(2592000); // 30 days in seconds, or omit for session cookie
+        response.addCookie(csrfCookie);
+        return ResponseEntity.ok().build();
     }
 }
