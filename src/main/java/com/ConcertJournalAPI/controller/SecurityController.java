@@ -52,10 +52,9 @@ public class SecurityController {
             Cookie newRefreshTokenCookie = new Cookie("refreshToken", newRefreshToken);
             newRefreshTokenCookie.setHttpOnly(false);
             newRefreshTokenCookie.setSecure(secureCookie); // Set to true if using HTTPS
-            newRefreshTokenCookie.setPath("/");
+            newRefreshTokenCookie.setMaxAge(86400 * 30); // 30 days
             newRefreshTokenCookie.setValue(newRefreshToken);
             newRefreshTokenCookie.setAttribute("SameSite", "Lax");
-            response.addCookie(newRefreshTokenCookie);
 
             return ResponseEntity.ok().body("{\"accessToken\":\"" + newAccessToken + "\"}");
         } catch (JwtException e) {
