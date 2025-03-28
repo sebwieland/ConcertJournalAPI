@@ -67,6 +67,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
+          registry: https://registry.wielandseb.synology.me/concertjournalbackend
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -106,5 +107,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/concertjournal:api-${{ env.new_version }}
+          tags: registry.wielandseb.synology.me/concertjournalbackend:${{ env.new_version }}
           platforms: linux/amd64,linux/arm64
