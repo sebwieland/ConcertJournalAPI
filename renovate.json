@@ -9,30 +9,44 @@
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true,
-      "automergeType": "pr",
-      "requiredStatusChecks": ["Build, Test and Publish"]
+      "automergeType": "pr"
     },
     {
-      "matchPackageNames": ["spring-boot-starter-parent"],
+      "matchPackageNames": [
+        "spring-boot-starter-parent"
+      ],
       "rangeStrategy": "replace"
     },
     {
       "groupName": "Spring Boot dependencies",
-      "matchPackagePatterns": ["^org\\.springframework\\.boot\\:"]
+      "matchPackageNames": [
+        "/^org\\.springframework\\.boot\\:/"
+      ]
     },
     {
       "groupName": "Testing libraries",
-      "matchPackagePatterns": ["^org\\.mockito\\:", "^junit\\:"]
+      "matchPackageNames": [
+        "/^org\\.mockito\\:/",
+        "/^junit\\:/"
+      ]
     },
     {
       "groupName": "Prometheus dependencies",
-      "matchPackageNames": ["micrometer-registry-prometheus"]
+      "matchPackageNames": [
+        "micrometer-registry-prometheus"
+      ]
     },
     {
       "groupName": "Database dependencies",
-      "matchPackagePatterns": ["^com\\.h2database\\:", "^mysql\\:"]
+      "matchPackageNames": [
+        "/^com\\.h2database\\:/",
+        "/^mysql\\:/"
+      ]
     }
   ]
 }
