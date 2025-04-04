@@ -101,12 +101,18 @@ jobs:
           git push origin ${{ env.new_version }}
 
       - name: Set up Docker Buildx
+        if: github.ref =='refs/heads/main'
         uses: docker/setup-buildx-action@v2
 
       - name: Build and push Docker image
+        if: github.ref =='refs/heads/main'
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags: registry.wielandseb.synology.me/concertjournalbackend:${{ env.new_version }}
+          tags: |
+            registry.wielandseb.synology.me/concertjournalbackend:${{ env.new_version }}
+            registry.wielandseb.synology.me/concertjournalbackend:latest
           platforms: linux/amd64,linux/arm64
+          cache-from: type=registry,ref=registry.wielandseb.synology.me/concertjournalbackend:cache
+          cache-to: type=registry,ref=registry.wielandseb.synology.me/concertjournalbackend:cache,mode=max
