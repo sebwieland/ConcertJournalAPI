@@ -1,0 +1,38 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "autodiscover": true,
+  "extends": [
+    "config:recommended",
+    ":preserveSemverRanges",
+    "group:monorepos",
+    "group:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "requiredStatusChecks": ["Build, Test and Publish"]
+    },
+    {
+      "matchPackageNames": ["spring-boot-starter-parent"],
+      "rangeStrategy": "replace"
+    },
+    {
+      "groupName": "Spring Boot dependencies",
+      "matchPackagePatterns": ["^org\\.springframework\\.boot\\:"]
+    },
+    {
+      "groupName": "Testing libraries",
+      "matchPackagePatterns": ["^org\\.mockito\\:", "^junit\\:"]
+    },
+    {
+      "groupName": "Prometheus dependencies",
+      "matchPackageNames": ["micrometer-registry-prometheus"]
+    },
+    {
+      "groupName": "Database dependencies",
+      "matchPackagePatterns": ["^com\\.h2database\\:", "^mysql\\:"]
+    }
+  ]
+}
