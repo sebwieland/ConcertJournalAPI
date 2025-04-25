@@ -24,5 +24,6 @@ jobs:
           configurationFile: renovate.json
         env:
           RENOVATE_TOKEN: ${{ secrets.RENOVATE_PAT }}
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
 #          LOG_LEVEL: debug
 #          RENOVATE_AUTODISCOVER: true
