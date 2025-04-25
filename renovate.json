@@ -1,6 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "autodiscover": true,
+  "enabled": true,
+  "repositories": ["sebwieland/ConcertJournalAPI"],
   "extends": [
     "config:recommended",
     ":preserveSemverRanges",
@@ -9,44 +10,29 @@
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "automergeType": "pr"
     },
     {
-      "matchPackageNames": [
-        "spring-boot-starter-parent"
-      ],
+      "matchPackageNames": ["spring-boot-starter-parent"],
       "rangeStrategy": "replace"
     },
     {
       "groupName": "Spring Boot dependencies",
-      "matchPackageNames": [
-        "/^org\\.springframework\\.boot\\:/"
-      ]
+      "matchPackagePatterns": ["^org\\.springframework\\.boot:"]
     },
     {
       "groupName": "Testing libraries",
-      "matchPackageNames": [
-        "/^org\\.mockito\\:/",
-        "/^junit\\:/"
-      ]
+      "matchPackagePatterns": ["^org\\.mockito:", "^junit:"]
     },
     {
       "groupName": "Prometheus dependencies",
-      "matchPackageNames": [
-        "micrometer-registry-prometheus"
-      ]
+      "matchPackageNames": ["micrometer-registry-prometheus"]
     },
     {
       "groupName": "Database dependencies",
-      "matchPackageNames": [
-        "/^com\\.h2database\\:/",
-        "/^mysql\\:/"
-      ]
+      "matchPackagePatterns": ["^com\\.h2database:", "^mysql:"]
     }
   ]
 }
