@@ -106,7 +106,7 @@ jobs:
 
       - name: Build and push Docker image
         if: github.ref =='refs/heads/main'
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
